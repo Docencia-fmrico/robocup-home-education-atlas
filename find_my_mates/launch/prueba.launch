@@ -1,0 +1,4 @@
+<launch>
+    <include file="$(find navigation)/launch/navigation.launch"></include>
+    <!--node pkg="find_my_mates" type="find_my_mates_node" name="Find_My_Mates" output="screen"></node-->
+</launch>
