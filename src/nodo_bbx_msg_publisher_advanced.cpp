@@ -11,6 +11,7 @@
 #include <sensor_msgs/Image.h>
 #include <darknet_ros_msgs/BoundingBoxes.h>
 #include "fsm_robocup/bbx_info.h"
+#include "fsm_robocup/ropa_hsv.h"
 #include "std_msgs/Header.h"
 
 class bbx_info{
@@ -18,8 +19,12 @@ public:
   ros::NodeHandle nh;
   int px, py, bbx_xmin, bbx_ymin;
   float dist;
+  int person_id,hupper, hlower, supper, slower, vupper,vlower;
+  std::string str_ropa;
+
   std_msgs::Header header;
   ros::Publisher pub = nh.advertise<fsm_robocup::bbx_info>("bbx_custom_topic",1);
+  ros::Publisher pub_ropa = nh.advertise<fsm_robocup::ropa_hsv>("bbx_ropa",1);
 
   void publicar()
   {
@@ -30,6 +35,21 @@ public:
     bbx_info.px = px;
     bbx_info.py = py;
     pub.publish(bbx_info);
+  }
+
+  void publicar_ropa()
+  {
+    fsm_robocup::ropa_hsv ropa_hsv;
+
+    ropa_hsv.header.stamp = ros::Time::now();
+    ropa_hsv.ropa = str_ropa;
+    ropa_hsv.hupper = hupper;
+    ropa_hsv.hlower = hlower;
+    ropa_hsv.supper = supper;
+    ropa_hsv.slower = slower;
+    ropa_hsv.vupper = vupper;
+    ropa_hsv.vlower = vlower;
+    pub_ropa.publish(ropa_hsv);
   }
 
 };
@@ -59,15 +79,12 @@ void callback_bbx(const sensor_msgs::ImageConstPtr& image, const darknet_ros_msg
         mensajero->publicar();
       }
     }
-
-    cv::namedWindow( "depth", cv::WINDOW_AUTOSIZE );
-    cv::imshow( "depth", img_ptr_depth->image);
-    cv::waitKey( 30 );
   }
 
   void rgb_callback(const sensor_msgs::ImageConstPtr& image, const darknet_ros_msgs::BoundingBoxesConstPtr& boxes, bbx_info *mensajero)
   {
     cv_bridge::CvImagePtr img_ptr_rgb;
+    double h_min, h_max, s_min, s_max, v_min, v_max;
 
     std::string str_person ("person");
     try{
@@ -78,6 +95,8 @@ void callback_bbx(const sensor_msgs::ImageConstPtr& image, const darknet_ros_msg
       ROS_ERROR("cv_bridge exception:  %s", e.what());
       return;
     }
+
+    //recortamos la imagen de la persona
     cv::Rect bbx_rect = cv::Rect(mensajero->bbx_xmin,mensajero->bbx_ymin,100,300);
     cv::Mat bbx_img = cv::Mat(img_ptr_rgb->image, bbx_rect);
 
@@ -85,21 +104,60 @@ void callback_bbx(const sensor_msgs::ImageConstPtr& image, const darknet_ros_msg
     cv::namedWindow( "complete image", cv::WINDOW_AUTOSIZE );
     cv::imshow( "complete image", img_ptr_rgb->image);
 
-    cv::Mat hsv;
-    
-    cv::cvtColor(bbx_img,hsv, cv::COLOR_BGR2HSV);
+    //recortamos la parte de la camiseta
+    cv::Rect rect_camiseta = cv::Rect(mensajero->bbx_xmin+25,mensajero->bbx_ymin+40,20,20);//las constantes son numeros magicos que habria que ajustar
+    cv::Mat camiseta = cv::Mat(img_ptr_rgb->image, rect_camiseta);
 
-    cv::namedWindow( "rgb", cv::WINDOW_AUTOSIZE );
     std::vector<cv::Mat> channels;
-    cv::split(hsv, channels);
+    
+    cv::Mat hsv_camiseta;
+    cv::cvtColor(camiseta,hsv_camiseta, cv::COLOR_BGR2HSV);
+    cv::split(hsv_camiseta, channels);
 
-    double h_min, h_max, s_min, s_max, v_min, v_max;
     cv::minMaxLoc(channels[0], &h_min, &h_max, nullptr, nullptr);
     cv::minMaxLoc(channels[1], &s_min, &s_max, nullptr, nullptr);
     cv::minMaxLoc(channels[2], &v_min, &v_max, nullptr, nullptr);
-    
+
+    mensajero->str_ropa = "camiseta";
+    mensajero->hupper = (int) h_max;
+    mensajero->hlower = (int) h_min;
+    mensajero->supper = (int) s_max;
+    mensajero->slower = (int) s_min;
+    mensajero->vupper = (int) v_max;
+    mensajero->vlower = (int) v_min;
+    mensajero->publicar_ropa();
+
     ROS_INFO("%f, %f, %f, %f, %f, %f", h_min, h_max, s_min, s_max, v_min, v_max);
+
+    //recortamos la parte del pantalon
+    cv::Rect rect_pantalon = cv::Rect(mensajero->bbx_xmin+15,mensajero->bbx_ymin+140,20,20);//las constantes son numeros magicos que habria que ajustar
+    cv::Mat pantalon = cv::Mat(img_ptr_rgb->image, rect_pantalon);
+    
+    cv::Mat hsv_pantalon;
+    cv::cvtColor(pantalon,hsv_pantalon, cv::COLOR_BGR2HSV);
+    cv::split(hsv_pantalon, channels);
+
+    cv::minMaxLoc(channels[0], &h_min, &h_max, nullptr, nullptr);
+    cv::minMaxLoc(channels[1], &s_min, &s_max, nullptr, nullptr);
+    cv::minMaxLoc(channels[2], &v_min, &v_max, nullptr, nullptr);
+
+    mensajero->str_ropa = "pantalon";
+    mensajero->hupper = (int) h_max;
+    mensajero->hlower = (int) h_min;
+    mensajero->supper = (int) s_max;
+    mensajero->slower = (int) s_min;
+    mensajero->vupper = (int) v_max;
+    mensajero->vlower = (int) v_min;
+    mensajero->publicar_ropa();
+
+    ROS_INFO("%f, %f, %f, %f, %f, %f", h_min, h_max, s_min, s_max, v_min, v_max);
+
+    cv::namedWindow( "rgb", cv::WINDOW_AUTOSIZE );//mostramos la imagen de la persona
+    cv::namedWindow( "camiseta", cv::WINDOW_AUTOSIZE );//mostramos la parte de la camiseta que vamos a usar
+    cv::namedWindow( "pantalon", cv::WINDOW_AUTOSIZE );//mostramos la parte del pantalon que vamos a usar
     cv::imshow( "rgb", bbx_img);
+    cv::imshow( "camiseta", camiseta);
+    cv::imshow( "pantalon", pantalon);
     cv::waitKey( 30 );
   }
 

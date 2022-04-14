@@ -32,6 +32,7 @@ find_package(catkin REQUIRED COMPONENTS
 add_message_files(
   FILES 
   bbx_info.msg
+  ropa_hsv.msg
 )
 
 generate_messages(

@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "optional": "cpp",
+        "variant": "cpp",
+        "chrono": "cpp",
+        "random": "cpp",
+        "limits": "cpp",
+        "algorithm": "cpp"
+    }
+}
