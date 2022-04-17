@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef FIND_MY_MATES_BTACTION_H
-#define FIND_MY_MATES_BTACTION_H
+#ifndef ROBOCUP_NAVIGATION_BTACTION_H
+#define ROBOCUP_NAVIGATION_BTACTION_H
 
 #include <ros/ros.h>
 
 #include "actionlib/client/simple_action_client.h"
 #include "move_base_msgs/MoveBaseAction.h"
 
-namespace find_my_mates
+namespace robocup_navigation
 {
 class BTNavAction : public BT::ActionNodeBase
 {
@@ -130,6 +130,6 @@ private:
   bool nav_succeded_;
 };
 
-}  // namespace find_my_mates
+}  // namespace robocup_navigation
 
-#endif  // FIND_MY_MATES_BTACTION_H
+#endif  // ROBOCUP_NAVIGATION_BTACTION_H

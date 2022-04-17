@@ -1,0 +1,11 @@
+ <root main_tree_to_execute = "MainTree" >
+     <BehaviorTree ID="MainTree">
+        <ReactiveSequence name="root_sequence">
+            <!--Inverter>
+                <InfoCompleted name="info_completed" goal="{goal}"/>
+            </Inverter-->
+            <Move   name="move" goal="{goal}"/>
+            <GetDescription name="get_description"/>
+        </ReactiveSequence>
+     </BehaviorTree>
+ </root>

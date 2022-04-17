@@ -12,23 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef FIND_MY_MATES_APPROACHOPERATOR_H
-#define FIND_MY_MATES_APPROACHOPERATOR_H
+#ifndef ROBOCUP_NAVIGATION_MOVE_H
+#define ROBOCUP_NAVIGATION_MOVE_H
 
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include "behaviortree_cpp_v3/bt_factory.h"
 
 #include <move_base_msgs/MoveBaseAction.h>
 #include <geometry_msgs/Pose.h>
-#include "find_my_mates/BTNavAction.h"
-#include <string>
 
-namespace find_my_mates
+#include "robocup_navigation/BTNavAction.h"
+#include "robocup_navigation/enum_pos.h"
+
+#include <string>
+#include "ros/ros.h"
+
+namespace robocup_navigation
 {
-class ApproachOperator : public BTNavAction
+class Move : public BTNavAction
 {
   public:
-    explicit ApproachOperator(const std::string& name,
+    explicit Move(const std::string& name,
     const std::string& action_name,
     const BT::NodeConfiguration& config);
 
@@ -39,9 +43,15 @@ class ApproachOperator : public BTNavAction
 
     static BT::PortsList providedPorts()
     {
-        return { BT::InputPort<geometry_msgs::Pose>("position") };
+        return { BT::InputPort<int>("goal") };
     }
+    
+  private:
+    ros::NodeHandle n_;
+    ros::ServiceClient goal_client_;
+    
+    int pos_;
 };
-}  // namespace find_my_mates
+}  // namespace robocup_navigation
 
-#endif  // FIND_MY_MATES_APPROACHOPERATOR_H
+#endif  // ROBOCUP_NAVIGATION_MOVE_H

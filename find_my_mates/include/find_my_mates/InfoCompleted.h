@@ -12,26 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef FIND_MY_MATES_GETPOSITION_H
-#define FIND_MY_MATES_GETPOSITION_H
+#ifndef FIND_MY_MATES_INFOCOMPLETED_H
+#define FIND_MY_MATES_INFOCOMPLETED_H
 
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include "behaviortree_cpp_v3/bt_factory.h"
 
-#include <tf/transform_listener.h>
-#include <geometry_msgs/Pose.h>
 #include <string>
-
-#include <move_base_msgs/MoveBaseAction.h>
 
 #include "ros/ros.h"
 
 namespace find_my_mates
 {
-class GetPosition : public BT::ActionNodeBase
+class InfoCompleted : public BT::ActionNodeBase
 {
   public:
-    explicit GetPosition(const std::string& name, const BT::NodeConfiguration& config);
+    explicit InfoCompleted(const std::string& name, const BT::NodeConfiguration& config);
     
     void halt();
 
@@ -39,14 +35,15 @@ class GetPosition : public BT::ActionNodeBase
 
     static BT::PortsList providedPorts()
     {
-        return { BT::OutputPort<geometry_msgs::Pose>("position") };
+        return { BT::OutputPort<int>("goal") };
     }
 
   private:
-    tf::TransformListener listener_;
+    static const int MAX_GUESTS = 3;
 
-    geometry_msgs::Pose pos_;
+    int guests_;
+    bool completed_;
 };
 }  // namespace find_my_mates
 
-#endif  // FIND_MY_MATES_GETPOSITION_H
+#endif  // FIND_MY_MATES_INFOCOMPLETED_H

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(find_my_mates)
+project(robocup_navigation)
 
 set(CMAKE_BUILD_TYPE Debug)
 
@@ -22,12 +22,30 @@ find_package(catkin REQUIRED COMPONENTS
   roslint
   actionlib
   actionlib_msgs
-  robocup_navigation
-  vision
+  message_generation
+  move_base_msgs
+  tf
+)
+
+add_service_files(
+   DIRECTORY srv
+   FILES Goal.srv
+)
+
+
+generate_messages(
+   DEPENDENCIES
+   std_msgs
+   geometry_msgs
 )
 
 catkin_package(
-CATKIN_DEPENDS roscpp std_msgs behaviortree_cpp_v3 actionlib_msgs robocup_navigation vision
+CATKIN_DEPENDS 
+  roscpp std_msgs 
+  behaviortree_cpp_v3
+  actionlib_msgs 
+  move_base_msgs 
+  tf
 )
 
 include_directories(
@@ -36,12 +54,9 @@ include_directories(
   ${ZMQ_INCLUDE_DIRS}
 )
 
-
-add_library(info_completed_bt_node SHARED src/find_my_mates/InfoCompleted.cpp)
-add_library(get_description_bt_node SHARED src/find_my_mates/GetDescription.cpp)
+add_library(move_bt_node SHARED src/robocup_navigation/Move.cpp)
 list(APPEND plugin_libs
-  info_completed_bt_node
-  get_description_bt_node
+  move_bt_node
 )
 
 foreach(bt_plugin ${plugin_libs})
@@ -49,13 +64,14 @@ foreach(bt_plugin ${plugin_libs})
   target_compile_definitions(${bt_plugin} PRIVATE BT_PLUGIN_EXPORT)
 endforeach()
 
-add_executable(find_my_mates_node src/find_my_mates_node.cpp)
-target_link_libraries(find_my_mates_node ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
+add_executable(move_node src/move_node.cpp)
+add_executable(goal_server_node src/goal_server_node.cpp)
 
+target_link_libraries(move_node ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
+target_link_libraries(goal_server_node ${catkin_LIBRARIES})
 
 roslint_cpp(
-  src/find_my_mates_node.cpp
-  include/find_my_mates/InfoCompleted.h src/find_my_mates/InfoCompleted.cpp
-  include/find_my_mates/GetDescription.h src/find_my_mates/GetDescription.cpp
+  src/move_node.cpp
+  src/goal_server_node.cpp
+  include/robocup_navigation/Move.h src/robocup_navigation/Move.cpp
 )
-

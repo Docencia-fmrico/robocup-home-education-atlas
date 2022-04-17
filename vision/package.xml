@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>find_my_mates</name>
+  <name>vision</name>
   <version>0.0.0</version>
-  <description>The find_my_mates package</description>
+  <description>The vision package</description>
 
   <maintainer email="fmrico@gmail.com">fmrico</maintainer>
 
@@ -20,8 +20,11 @@
   <build_depend>roslint</build_depend>
   <build_depend>libzmq3-dev</build_depend>
   <build_depend>actionlib_msgs</build_depend>
-  <build_depend>robocup_navigation</build_depend>
-  <build_depend>vision</build_depend>
+  <build_depend>move_base_msgs</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>image_transport</build_depend>
+  <build_depend>cv_bridge</build_depend>
+  <build_depend>message_generation</build_depend>
 
   <build_export_depend>roscpp</build_export_depend>
   <build_export_depend>std_msgs</build_export_depend>
@@ -29,8 +32,9 @@
   <build_export_depend>behaviortree_cpp_v3</build_export_depend>
   <build_export_depend>libzmq3-dev</build_export_depend>
   <build_export_depend>actionlib_msgs</build_export_depend>
-  <build_export_depend>robocup_navigation</build_export_depend>
-  <build_export_depend>vision</build_export_depend>
+  <build_export_depend>move_base_msgs</build_export_depend>
+  <build_export_depend>image_transport</build_export_depend>
+  <build_export_depend>cv_bridge</build_export_depend>
 
   <exec_depend>roscpp</exec_depend>
   <exec_depend>std_msgs</exec_depend>
@@ -38,8 +42,10 @@
   <exec_depend>behaviortree_cpp_v3</exec_depend>
   <exec_depend>libzmq3-dev</exec_depend>
   <exec_depend>actionlib_msgs</exec_depend>
-  <exec_depend>robocup_navigation</exec_depend>
-  <exec_depend>vision</exec_depend>
+  <exec_depend>move_base_msgs</exec_depend>
+  <exec_depend>image_transport</exec_depend>
+  <exec_depend>cv_bridge</exec_depend>
+  <exec_depend>message_runtime</exec_depend>
 
   <export>
   </export>

@@ -1,0 +1,5 @@
+<launch>
+    <include file="$(find navigation)/launch/navigation.launch"></include>
+    <node pkg="robocup_navigation" type="goal_server_node" name="goal_server" output="screen"></node>
+    <!--node pkg="robocup_navigation" type="move_node" name="Navigation" output="screen"></node-->
+</launch>
