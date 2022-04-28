@@ -7,6 +7,7 @@
 
 #include <cmath>
 #include <vector>
+#include <iostream>
 
 #include <sensor_msgs/Image.h>
 #include <darknet_ros_msgs/BoundingBoxes.h>
@@ -17,10 +18,16 @@
 class bbx_info{
 public:
   ros::NodeHandle nh;
-  int px, py, bbx_xmin, bbx_ymin;
+  int px, py;
+  int bbx_xmin = 0;
+  int bbx_ymin = 0;
+  int bbx_xmax = 0;
+  int bbx_ymax = 0;
+
   float dist;
-  int person_id,hupper, hlower, supper, slower, vupper,vlower;
-  std::string str_ropa;
+  
+  std::string color_camiseta;
+  std::string color_pantalon;
 
   std_msgs::Header header;
   ros::Publisher pub = nh.advertise<fsm_robocup::bbx_info>("bbx_custom_topic",1);
@@ -42,13 +49,8 @@ public:
     fsm_robocup::ropa_hsv ropa_hsv;
 
     ropa_hsv.header.stamp = ros::Time::now();
-    ropa_hsv.ropa = str_ropa;
-    ropa_hsv.hupper = hupper;
-    ropa_hsv.hlower = hlower;
-    ropa_hsv.supper = supper;
-    ropa_hsv.slower = slower;
-    ropa_hsv.vupper = vupper;
-    ropa_hsv.vlower = vlower;
+    ropa_hsv.color_camiseta = color_camiseta;
+    ropa_hsv.color_pantalon = color_pantalon;
     pub_ropa.publish(ropa_hsv);
   }
 
@@ -72,6 +74,8 @@ void callback_bbx(const sensor_msgs::ImageConstPtr& image, const darknet_ros_msg
         mensajero->py = (box.ymax + box.ymin) / 2;
         mensajero->bbx_xmin = box.xmin;
         mensajero->bbx_ymin = box.ymin;
+        mensajero->bbx_xmax = box.xmax;
+        mensajero->bbx_ymax = box.ymax;
 
         mensajero->dist = img_ptr_depth->image.at<float>(cv::Point(mensajero->px, mensajero->py))* 0.001f;//* 0.001f
 
@@ -81,10 +85,171 @@ void callback_bbx(const sensor_msgs::ImageConstPtr& image, const darknet_ros_msg
     }
   }
 
+  std::string nombrar_color(int color){
+
+    std::string color_name;
+    switch (color){
+      case 0:
+        color_name = "blanco";
+        break;
+      case 1:
+        color_name = "negro";
+        break;
+      case 2:
+        color_name = "rojo";
+        break;
+      case 3:
+        color_name = "naranja";
+        break;
+      case 4:
+        color_name = "amarillo";
+        break;
+      case 5:
+        color_name = "verde";
+        break;
+      case 6:
+        color_name = "azul";
+        break;
+      case 7:
+        color_name = "morado";
+        break;
+      case 8:
+        color_name = "rosa";
+        break;
+    }
+    return color_name;
+  }
+
+  void detectar_color(cv::Mat img_ptr_rgb, bbx_info *mensajero){
+    cv::Mat rgb, hsv, mask_blanco_vis, mask_blanco, mask_rojo1, mask_rojo2, mask_rojo, mask_rojo_vis;
+    cv::Mat mask_naranja, mask_naranja_vis, mask_amarilla, mask_amarilla_vis, mask_verde, mask_verde_vis;
+    cv::Mat mask_azul, mask_azul_vis, mask_morado, mask_morado_vis, mask_rosa, mask_rosa_vis;
+    cv::Mat mask_negro, mask_negro_vis;
+
+    rgb = cv::Mat(img_ptr_rgb);
+    cv::cvtColor(rgb, hsv, cv::COLOR_BGR2HSV);
+
+    cv::inRange(hsv, cv::Scalar(0, 0, 200, 0), cv::Scalar(180, 255, 255, 0), mask_blanco);
+    cv::bitwise_and(rgb, rgb, mask_blanco_vis, mask_blanco);
+
+    cv::inRange(hsv, cv::Scalar(0, 0, 0, 0), cv::Scalar(0, 0, 40, 0), mask_negro);
+    cv::bitwise_and(rgb, rgb, mask_negro_vis, mask_negro);
+
+    cv::inRange(hsv, cv::Scalar(0, 100, 20, 0), cv::Scalar(8, 255, 255, 0), mask_rojo1);
+    cv::inRange(hsv, cv::Scalar(175, 100, 20, 0), cv::Scalar(179, 255, 255, 0), mask_rojo2);
+    cv::add(mask_rojo1, mask_rojo2, mask_rojo);
+    cv::bitwise_and(rgb, rgb, mask_rojo_vis, mask_rojo);
+
+    cv::inRange(hsv, cv::Scalar(9, 100, 20, 0), cv::Scalar(22, 255, 255, 0), mask_naranja);
+    cv::bitwise_and(rgb, rgb, mask_naranja_vis, mask_naranja);
+
+    cv::inRange(hsv, cv::Scalar(23, 100, 20, 0), cv::Scalar(35, 255, 255, 0), mask_amarilla);
+    cv::bitwise_and(rgb, rgb, mask_amarilla_vis, mask_amarilla);
+
+    cv::inRange(hsv, cv::Scalar(36, 100, 20, 0), cv::Scalar(74, 255, 255, 0), mask_verde);
+    cv::bitwise_and(rgb, rgb, mask_verde_vis, mask_verde);
+
+    cv::inRange(hsv, cv::Scalar(75, 100, 20, 0), cv::Scalar(128, 255, 255, 0), mask_azul);
+    cv::bitwise_and(rgb, rgb, mask_azul_vis, mask_azul);
+
+    cv::inRange(hsv, cv::Scalar(129, 100, 20, 0), cv::Scalar(140, 255, 255, 0), mask_morado);
+    cv::bitwise_and(rgb, rgb, mask_morado_vis, mask_morado);
+
+    cv::inRange(hsv, cv::Scalar(141, 100, 20, 0), cv::Scalar(174, 255, 255, 0), mask_rosa);
+    cv::bitwise_and(rgb, rgb, mask_rosa_vis, mask_rosa);
+
+    std::vector<std::vector<cv::Point> > contours;
+    std::vector<cv::Vec4i> jerarquia;
+    std::vector<cv::Mat> all_masks = {mask_blanco,mask_negro,mask_rojo,mask_naranja,mask_amarilla,mask_verde,mask_azul, mask_morado, mask_rosa};
+    int max_area_mask, second_max_area_mask, contour_max_index, second_contour_max_index;
+    max_area_mask = 0;
+    second_max_area_mask = 0;
+    contour_max_index = 0;
+    second_contour_max_index = 0;
+    double max_area_size = 0;
+    double second_max_area_size = 0;
+
+    double y_big, y_2big;
+
+    cv::Mat drawing_1, drawing_2;
+
+    for(int i = 0; i < 9; i++){
+
+      findContours( all_masks[i], contours, jerarquia, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE, cv::Point(0,0));
+      std::vector<cv::Moments> mu(contours.size() );
+      for( int k = 0; k < contours.size(); k++ ){
+        mu[k] = cv::moments( contours[k] );
+      }
+      for( int j = 0; j < contours.size(); j++ )
+      {
+        if(cv::contourArea(contours[j]) > max_area_size){
+          max_area_mask = i;
+          contour_max_index = j;
+          max_area_size = cv::contourArea(contours[j]);
+          drawing_1 = cv::Mat::zeros( rgb.size(), CV_8UC3 );
+          cv::drawContours( drawing_1, contours, j, cv::Scalar(255,255,255), -1, cv::LINE_8);
+          y_big = static_cast<int>(mu[j].m01 / (mu[i].m00 + 1e-5));
+
+        }else if(cv::contourArea(contours[j]) > second_max_area_size && cv::contourArea(contours[j]) < max_area_size){
+          second_max_area_mask = i;
+          second_contour_max_index = j;
+          second_max_area_size = cv::contourArea(contours[j]);
+          drawing_2 = cv::Mat::zeros( rgb.size(), CV_8UC3 );
+          cv::drawContours( drawing_2, contours, j, cv::Scalar(255,255,255), -1, cv::LINE_8);
+          y_2big = static_cast<double>(mu[j].m01 / (mu[i].m00 + 1e-5));
+        }
+      }
+    }
+
+    std::string color_name_big = nombrar_color(max_area_mask);
+    std::string color_name_2big = nombrar_color(second_max_area_mask);
+
+
+    mensajero->color_camiseta = color_name_2big;
+    mensajero->color_pantalon = color_name_big;
+
+    if( y_big > y_2big){
+      mensajero->color_camiseta = color_name_big;
+      mensajero->color_pantalon = color_name_2big;
+    }
+
+    std::cout << "camiseta " << mensajero->color_camiseta << " y pantalon " << mensajero->color_pantalon << std::endl;
+
+    cv::Mat result, result_drawing;
+    cv::add(drawing_1, drawing_2, result_drawing);
+
+    cv::bitwise_and(rgb,result_drawing,result);
+    cv::imshow( "Contours", result );
+    
+    /*
+    cv::namedWindow( "blanco", cv::WINDOW_AUTOSIZE );
+    cv::imshow( "blanco", mask_blanco_vis);
+    cv::namedWindow( "blanco", cv::WINDOW_AUTOSIZE );
+    cv::imshow( "blanco", mask_blanco_vis);
+    cv::namedWindow( "negro", cv::WINDOW_AUTOSIZE );
+    cv::imshow( "negro", mask_negro_vis);
+    cv::namedWindow( "rojo", cv::WINDOW_AUTOSIZE );
+    cv::imshow( "rojo", mask_rojo_vis);
+    cv::namedWindow( "naranja", cv::WINDOW_AUTOSIZE );
+    cv::imshow( "naranja", mask_naranja_vis);
+    cv::namedWindow( "amarillo", cv::WINDOW_AUTOSIZE );
+    cv::imshow( "amarillo", mask_amarilla_vis);
+    cv::namedWindow( "verde", cv::WINDOW_AUTOSIZE );
+    cv::imshow( "verde", mask_verde_vis);
+    cv::imshow( "morado", mask_morado_vis);
+    cv::namedWindow( "rosa", cv::WINDOW_AUTOSIZE );
+    cv::imshow( "rosa", mask_rosa_vis);
+    cv::imshow( "Example 2-10", rgb );
+    cv::namedWindow( "amarillo", cv::WINDOW_AUTOSIZE );
+    cv::imshow( "amarillo", mask_amarilla_vis);
+    */
+    mensajero->publicar_ropa();
+    cv::waitKey( 30 );
+  }
+
   void rgb_callback(const sensor_msgs::ImageConstPtr& image, const darknet_ros_msgs::BoundingBoxesConstPtr& boxes, bbx_info *mensajero)
   {
     cv_bridge::CvImagePtr img_ptr_rgb;
-    double h_min, h_max, s_min, s_max, v_min, v_max;
 
     std::string str_person ("person");
     try{
@@ -96,69 +261,23 @@ void callback_bbx(const sensor_msgs::ImageConstPtr& image, const darknet_ros_msg
       return;
     }
 
+    int ancho = abs(mensajero->bbx_xmax - mensajero->bbx_xmin);
+    int alto = abs(mensajero->bbx_ymax - mensajero->bbx_ymin);
+    ROS_INFO("%d, %d", ancho, alto);
+    
     //recortamos la imagen de la persona
-    cv::Rect bbx_rect = cv::Rect(mensajero->bbx_xmin,mensajero->bbx_ymin,100,300);
-    cv::Mat bbx_img = cv::Mat(img_ptr_rgb->image, bbx_rect);
-
-    std::cerr << " colors px: "<< mensajero->px << "py: "<< mensajero->py << std::endl;
+    if(ancho > 0 && alto > 0){
+      cv::Rect bbx_rect = cv::Rect(mensajero->bbx_xmin,mensajero->bbx_ymin,ancho,alto);
+      cv::Mat bbx_img = cv::Mat(img_ptr_rgb->image, bbx_rect);
+      cv::namedWindow( "person", cv::WINDOW_AUTOSIZE );
+      cv::imshow( "person", bbx_img);
+      detectar_color(bbx_img, mensajero);
+    }
+    
     cv::namedWindow( "complete image", cv::WINDOW_AUTOSIZE );
     cv::imshow( "complete image", img_ptr_rgb->image);
-
-    //recortamos la parte de la camiseta
-    cv::Rect rect_camiseta = cv::Rect(mensajero->bbx_xmin+25,mensajero->bbx_ymin+40,20,20);//las constantes son numeros magicos que habria que ajustar
-    cv::Mat camiseta = cv::Mat(img_ptr_rgb->image, rect_camiseta);
-
-    std::vector<cv::Mat> channels;
-    
-    cv::Mat hsv_camiseta;
-    cv::cvtColor(camiseta,hsv_camiseta, cv::COLOR_BGR2HSV);
-    cv::split(hsv_camiseta, channels);
-
-    cv::minMaxLoc(channels[0], &h_min, &h_max, nullptr, nullptr);
-    cv::minMaxLoc(channels[1], &s_min, &s_max, nullptr, nullptr);
-    cv::minMaxLoc(channels[2], &v_min, &v_max, nullptr, nullptr);
-
-    mensajero->str_ropa = "camiseta";
-    mensajero->hupper = (int) h_max;
-    mensajero->hlower = (int) h_min;
-    mensajero->supper = (int) s_max;
-    mensajero->slower = (int) s_min;
-    mensajero->vupper = (int) v_max;
-    mensajero->vlower = (int) v_min;
-    mensajero->publicar_ropa();
-
-    ROS_INFO("%f, %f, %f, %f, %f, %f", h_min, h_max, s_min, s_max, v_min, v_max);
-
-    //recortamos la parte del pantalon
-    cv::Rect rect_pantalon = cv::Rect(mensajero->bbx_xmin+15,mensajero->bbx_ymin+140,20,20);//las constantes son numeros magicos que habria que ajustar
-    cv::Mat pantalon = cv::Mat(img_ptr_rgb->image, rect_pantalon);
-    
-    cv::Mat hsv_pantalon;
-    cv::cvtColor(pantalon,hsv_pantalon, cv::COLOR_BGR2HSV);
-    cv::split(hsv_pantalon, channels);
-
-    cv::minMaxLoc(channels[0], &h_min, &h_max, nullptr, nullptr);
-    cv::minMaxLoc(channels[1], &s_min, &s_max, nullptr, nullptr);
-    cv::minMaxLoc(channels[2], &v_min, &v_max, nullptr, nullptr);
-
-    mensajero->str_ropa = "pantalon";
-    mensajero->hupper = (int) h_max;
-    mensajero->hlower = (int) h_min;
-    mensajero->supper = (int) s_max;
-    mensajero->slower = (int) s_min;
-    mensajero->vupper = (int) v_max;
-    mensajero->vlower = (int) v_min;
-    mensajero->publicar_ropa();
-
-    ROS_INFO("%f, %f, %f, %f, %f, %f", h_min, h_max, s_min, s_max, v_min, v_max);
-
-    cv::namedWindow( "rgb", cv::WINDOW_AUTOSIZE );//mostramos la imagen de la persona
-    cv::namedWindow( "camiseta", cv::WINDOW_AUTOSIZE );//mostramos la parte de la camiseta que vamos a usar
-    cv::namedWindow( "pantalon", cv::WINDOW_AUTOSIZE );//mostramos la parte del pantalon que vamos a usar
-    cv::imshow( "rgb", bbx_img);
-    cv::imshow( "camiseta", camiseta);
-    cv::imshow( "pantalon", pantalon);
     cv::waitKey( 30 );
+    
   }
 
 int main(int argc, char** argv)
@@ -174,8 +293,8 @@ int main(int argc, char** argv)
 
 
   typedef message_filters::sync_policies::ApproximateTime<sensor_msgs::Image, darknet_ros_msgs::BoundingBoxes> MySyncPolicy_bbx;
-  message_filters::Synchronizer<MySyncPolicy_bbx> sync_bbx(MySyncPolicy_bbx(10), image_depth_sub, bbx_sub);
-  message_filters::Synchronizer<MySyncPolicy_bbx> sync_bbx_rgb(MySyncPolicy_bbx(10), image_rgb_sub, bbx_sub);
+  message_filters::Synchronizer<MySyncPolicy_bbx> sync_bbx(MySyncPolicy_bbx(20), image_depth_sub, bbx_sub);
+  message_filters::Synchronizer<MySyncPolicy_bbx> sync_bbx_rgb(MySyncPolicy_bbx(20), image_rgb_sub, bbx_sub);
 
   sync_bbx.registerCallback(boost::bind(&callback_bbx, _1, _2, &mensajero));
   sync_bbx_rgb.registerCallback(boost::bind(&rgb_callback, _1, _2, &mensajero));
