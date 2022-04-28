@@ -31,13 +31,14 @@ class Get_Name: public gb_dialog::DialogInterface
       pub_name_ = nh_.advertise<dialog_atlas::get_name>("/get_name",1);
 
       this->registerCallback(std::bind(&Get_Name::noIntentCB, this, ph::_1));
-      this->registerCallback(
-        std::bind(&Get_Name::welcomeIntentCB, this, ph::_1),
-        "Default Welcome Intent");
 
       this->registerCallback(
         std::bind(&Get_Name::getNameIntentCB, this, ph::_1),
         "Get Name Intent");
+
+      this->registerCallback(
+        std::bind(&Get_Name::checkNameIntentCB, this, ph::_1),
+        "Check Name Intent"); 
     }
  
     void noIntentCB(dialogflow_ros_msgs::DialogflowResult result)
@@ -49,29 +50,30 @@ class Get_Name: public gb_dialog::DialogInterface
     void getNameIntentCB(dialogflow_ros_msgs::DialogflowResult result)
     {
       ROS_INFO("[Get_Name] getNameIntentCB: intent [%s]", result.intent.c_str());
+      for (const auto & param : result.parameters){
+        for (const auto & value : param.value){  //obtener la respuesta
+        std::cerr << "\t" << value << std::endl;
+        }
+      }
       speak(result.fulfillment_text);
   
     }
 
-    void welcomeIntentCB(dialogflow_ros_msgs::DialogflowResult result)
+
+    void checkNameIntentCB(dialogflow_ros_msgs::DialogflowResult result)
     {
-      ROS_INFO("[Get_Name] welcomeIntentCB: intent [%s]", result.intent.c_str());
+      ROS_INFO("[Get_Name] checkNameIntentCB: intent [%s]", result.intent.c_str());
       speak(result.fulfillment_text);
+  
     }
+
 
     
     void dialog()
     {
 
-      
-      
-      /*ros::Duration(0.5).sleep();
-      speak("Tell me your name");
-      ros::Duration(1).sleep();
-      listen();
-      ros::Duration(2).sleep();*/
-    
       dialog_atlas::get_name person_name;
+
 
       switch (state_)
       {
@@ -81,22 +83,27 @@ class Get_Name: public gb_dialog::DialogInterface
           ros::Duration(0.5).sleep();
           speak("Tell me your name");
           state_ = LISTEN;
-          ROS_INFO("%i", state_);
-        
-          break;
+          start_ts_ = ros::Time::now();
 
 
         case LISTEN:
-        
-          listen();
+          
           ROS_INFO("IDEL -> LISTEN");
+          listen_ts_  = ros::Time::now();
+          while ((ros::Time::now() - start_ts_).toSec() <= WAITING_TIME) 
+          {
+            listen();
+            
 
-      
+          }
+
 
           break;
 
         case SPEAK:
-    
+
+          ROS_INFO("LISTEN -> SPEAK");
+          //listen();
 
           break;
       }
@@ -109,8 +116,11 @@ class Get_Name: public gb_dialog::DialogInterface
    private:
     ros::NodeHandle nh_;
     ros::Publisher pub_name_;
+    ros::Time listen_ts_;
+    ros::Time start_ts_;
 
     int state_;
+    static constexpr double WAITING_TIME = 10;
     static const int IDLE = 0;
     static const int LISTEN = 1;
     static const int SPEAK = 2;
@@ -129,14 +139,11 @@ int main(int argc, char** argv)
   
  
   forwarder.dialog();
-  ros::spin();
-  //ros::spinOnce();
+  //ros::spin();
+  ros::spinOnce();
   ros::Duration(1).sleep();
   loop_rate.sleep();
     
-  //forwarder.dialog();
-  //forwarder.listen();
-  //ros::spin();
   return 0;
 }
 
