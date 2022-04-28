@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>dialog_atlas</name>
+  <version>0.0.0</version>
+  <description>The dialog_atlas package</description>
+
+
+  <maintainer email="ej.matos.2020@alumnos.urjc">elisa</maintainer>
+
+  <license>TODO</license>
+
+
+  <author email="ej.matos.2020@alumnos.urjc">Elisa M</author>
+
+
+  
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>behaviortree_cpp_v3</build_depend>
+  <build_depend>gb_dialog</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>dialogflow_ros_msgs</build_depend>
+  <build_depend>roslint</build_depend>
+  <build_depend>sound_play</build_depend>
+  <build_depend>actionlib_msgs</build_depend>
+  <build_depend>message_generation</build_depend>
+  <build_depend>libzmq3-dev</build_depend>
+  
+  
+  <build_export_depend>behaviortree_cpp_v3</build_export_depend>
+  <build_export_depend>gb_dialog</build_export_depend>
+  <build_export_depend>libzmq3-dev</build_export_depend>
+  <build_export_depend>std_msgs</build_export_depend>
+
+
+  <exec_depend>roscpp</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>dialogflow_ros_msgs</exec_depend>
+  <exec_depend>sound_play</exec_depend>
+  <exec_depend>actionlib_msgs</exec_depend>
+  <exec_depend>message_runtime</exec_depend>
+  <exec_depend>behaviortree_cpp_v3</exec_depend>
+  <exec_depend>gb_dialog</exec_depend>
+  <exec_depend>libzmq3-dev</exec_depend>
+
+ 
+  <export>
+
+  </export>
+</package>
