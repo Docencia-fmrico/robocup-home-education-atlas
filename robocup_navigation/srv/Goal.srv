@@ -1,3 +1,0 @@
-int32 position
----
-geometry_msgs/Pose goal

@@ -22,6 +22,7 @@ find_package(catkin REQUIRED COMPONENTS
   roslint
   actionlib
   actionlib_msgs
+  fsm_visual_behavior
   robocup_navigation
   vision
 )
@@ -37,10 +38,8 @@ include_directories(
 )
 
 
-add_library(info_completed_bt_node SHARED src/find_my_mates/InfoCompleted.cpp)
 add_library(get_description_bt_node SHARED src/find_my_mates/GetDescription.cpp)
 list(APPEND plugin_libs
-  info_completed_bt_node
   get_description_bt_node
 )
 
@@ -55,7 +54,6 @@ target_link_libraries(find_my_mates_node ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
 
 roslint_cpp(
   src/find_my_mates_node.cpp
-  include/find_my_mates/InfoCompleted.h src/find_my_mates/InfoCompleted.cpp
   include/find_my_mates/GetDescription.h src/find_my_mates/GetDescription.cpp
 )
 

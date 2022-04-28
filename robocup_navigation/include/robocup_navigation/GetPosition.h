@@ -12,22 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef FIND_MY_MATES_INFOCOMPLETED_H
-#define FIND_MY_MATES_INFOCOMPLETED_H
+#ifndef ROBOCUP_NAVIGATION_GETPOSITION_H
+#define ROBOCUP_NAVIGATION_GETPOSITION_H
 
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include "behaviortree_cpp_v3/bt_factory.h"
 
+#include <geometry_msgs/Pose.h>
 #include <string>
 
 #include "ros/ros.h"
 
-namespace find_my_mates
+namespace robocup_navigation
 {
-class InfoCompleted : public BT::ActionNodeBase
+class GetPosition : public BT::ActionNodeBase
 {
   public:
-    explicit InfoCompleted(const std::string& name, const BT::NodeConfiguration& config);
+    explicit GetPosition(const std::string& name, const BT::NodeConfiguration& config);
     
     void halt();
 
@@ -35,15 +36,28 @@ class InfoCompleted : public BT::ActionNodeBase
 
     static BT::PortsList providedPorts()
     {
-        return { BT::OutputPort<int>("goal") };
+        return 
+        { 
+          BT::InputPort<int>("goal"),
+          BT::OutputPort<geometry_msgs::Pose>("position") 
+        };
     }
 
   private:
+    ros::NodeHandle n_;
+    ros::ServiceClient pos_client_;
+    
+    geometry_msgs::Pose pos_;
+    int goal_;
+    bool new_goal_;
+
     static const int MAX_GUESTS = 3;
+    int guests[MAX_GUESTS];
+    int n_guests_;
+    int guest_;
 
-    int guests_;
-    bool completed_;
+    int ChooseGuest();
 };
-}  // namespace find_my_mates
+}  // namespace robocup_navigation
 
-#endif  // FIND_MY_MATES_INFOCOMPLETED_H
+#endif  // ROBOCUP_NAVIGATION_GETPOSITION_H

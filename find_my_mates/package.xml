@@ -20,6 +20,7 @@
   <build_depend>roslint</build_depend>
   <build_depend>libzmq3-dev</build_depend>
   <build_depend>actionlib_msgs</build_depend>
+  <build_depend>fsm_visual_behavior</build_depend>
   <build_depend>robocup_navigation</build_depend>
   <build_depend>vision</build_depend>
 
@@ -29,6 +30,7 @@
   <build_export_depend>behaviortree_cpp_v3</build_export_depend>
   <build_export_depend>libzmq3-dev</build_export_depend>
   <build_export_depend>actionlib_msgs</build_export_depend>
+  <build_export_depend>fsm_visual_behavior</build_export_depend>
   <build_export_depend>robocup_navigation</build_export_depend>
   <build_export_depend>vision</build_export_depend>
 
@@ -38,6 +40,7 @@
   <exec_depend>behaviortree_cpp_v3</exec_depend>
   <exec_depend>libzmq3-dev</exec_depend>
   <exec_depend>actionlib_msgs</exec_depend>
+  <exec_depend>fsm_visual_behavior</exec_depend>
   <exec_depend>robocup_navigation</exec_depend>
   <exec_depend>vision</exec_depend>
 

@@ -32,8 +32,8 @@ int main(int argc, char **argv)
   BT::BehaviorTreeFactory factory;
   BT::SharedLibrary loader;
 
-  factory.registerFromPlugin(loader.getOSName("info_completed_bt_node"));
   factory.registerFromPlugin(loader.getOSName("get_description_bt_node"));
+  factory.registerFromPlugin(loader.getOSName("get_position_bt_node"));
   factory.registerFromPlugin(loader.getOSName("move_bt_node"));
 
   auto blackboard = BT::Blackboard::create();

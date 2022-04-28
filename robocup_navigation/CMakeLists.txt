@@ -29,7 +29,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 add_service_files(
    DIRECTORY srv
-   FILES Goal.srv
+   FILES Position.srv
 )
 
 
@@ -54,8 +54,10 @@ include_directories(
   ${ZMQ_INCLUDE_DIRS}
 )
 
+add_library(get_position_bt_node SHARED src/robocup_navigation/GetPosition.cpp)
 add_library(move_bt_node SHARED src/robocup_navigation/Move.cpp)
 list(APPEND plugin_libs
+  get_position_bt_node
   move_bt_node
 )
 
@@ -65,13 +67,14 @@ foreach(bt_plugin ${plugin_libs})
 endforeach()
 
 add_executable(move_node src/move_node.cpp)
-add_executable(goal_server_node src/goal_server_node.cpp)
+add_executable(position_server_node src/position_server_node.cpp)
 
 target_link_libraries(move_node ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
-target_link_libraries(goal_server_node ${catkin_LIBRARIES})
+target_link_libraries(position_server_node ${catkin_LIBRARIES})
 
 roslint_cpp(
   src/move_node.cpp
-  src/goal_server_node.cpp
+  src/position_server_node.cpp
+  include/robocup_navigation/GetPosition.h src/robocup_navigation/GetPosition.cpp
   include/robocup_navigation/Move.h src/robocup_navigation/Move.cpp
 )

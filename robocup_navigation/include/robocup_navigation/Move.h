@@ -43,14 +43,15 @@ class Move : public BTNavAction
 
     static BT::PortsList providedPorts()
     {
-        return { BT::InputPort<int>("goal") };
+        return 
+        {
+          BT::InputPort<geometry_msgs::Pose>("position") 
+        };
     }
     
   private:
-    ros::NodeHandle n_;
-    ros::ServiceClient goal_client_;
-    
-    int pos_;
+    geometry_msgs::Pose pos_;
+    bool new_goal_;
 };
 }  // namespace robocup_navigation
 

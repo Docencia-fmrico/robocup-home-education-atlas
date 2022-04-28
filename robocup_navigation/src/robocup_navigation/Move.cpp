@@ -30,9 +30,8 @@ Move::Move(
   const std::string& name,
   const std::string& action_name,
   const BT::NodeConfiguration& config)
-: BTNavAction(name, action_name, config), pos_(INIT_POS)
+: BTNavAction(name, action_name, config), new_goal_(false)
 {
-  goal_client_ = n_.serviceClient<robocup_navigation::Goal>("goal");
 }
 
 void
@@ -46,30 +45,19 @@ Move::on_start()
 {
   move_base_msgs::MoveBaseGoal goal;
 
-  auto res = getInput<int>("goal");
-  if(res) { pos_ = res.value(); }
+  pos_ = getInput<geometry_msgs::Pose>("position").value();
 
-    ROS_INFO("trazaaaaaaaaaaaaaaaaaaaaaaaaaaaa %i", pos_);  
-  
-  robocup_navigation::Goal srv;
-  srv.request.position = pos_;
+  ROS_INFO("Got position! x = %f, y = %f", pos_.position.x, pos_.orientation.w);
 
-  if (goal_client_.call(srv))
-  {
-    goal.target_pose.header.frame_id = "map";
-    goal.target_pose.header.stamp = ros::Time::now();
-    goal.target_pose.pose.position.x = srv.response.goal.position.x;
-    goal.target_pose.pose.position.y = srv.response.goal.position.y;
-    goal.target_pose.pose.position.z = srv.response.goal.position.z;
-    goal.target_pose.pose.orientation.x = srv.response.goal.orientation.x;
-    goal.target_pose.pose.orientation.y = srv.response.goal.orientation.y;
-    goal.target_pose.pose.orientation.z = srv.response.goal.orientation.z;
-    goal.target_pose.pose.orientation.w = srv.response.goal.orientation.w;
-  }
-  else
-  {
-    ROS_ERROR("Failed to call service distance");
-  }
+  goal.target_pose.header.frame_id = "map";
+  goal.target_pose.header.stamp = ros::Time::now();
+  goal.target_pose.pose.position.x = pos_.position.x;
+  goal.target_pose.pose.position.y = pos_.position.y;
+  goal.target_pose.pose.position.z = pos_.position.z;
+  goal.target_pose.pose.orientation.x = pos_.orientation.x;
+  goal.target_pose.pose.orientation.y = pos_.orientation.y;
+  goal.target_pose.pose.orientation.z = pos_.orientation.z;
+  goal.target_pose.pose.orientation.w = pos_.orientation.w;
 
   set_goal(goal);
 

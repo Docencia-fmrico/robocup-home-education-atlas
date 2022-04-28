@@ -1,11 +1,16 @@
  <root main_tree_to_execute = "MainTree" >
      <BehaviorTree ID="MainTree">
-        <ReactiveSequence name="root_sequence">
-            <!--Inverter>
-                <InfoCompleted name="info_completed" goal="{goal}"/>
-            </Inverter-->
-            <Move   name="move" goal="{goal}"/>
-            <GetDescription name="get_description"/>
-        </ReactiveSequence>
+        <Sequence name="root_sequence">
+            <GetPosition name="get_position" goal="0" position="{position}"/>
+            <Move   name="move" position="{position}"/> 
+            <Repeat num_cycles="3">
+                <Sequence>
+                    <GetPosition name="get_position" goal="2" position="{position}"/>
+                    <Move   name="move" position="{position}"/> 
+                </Sequence>
+            </Repeat>
+            <GetPosition name="get_position" goal="1" position="{position}"/>
+            <Move   name="move" position="{position}"/> 
+        </Sequence>
      </BehaviorTree>
  </root>

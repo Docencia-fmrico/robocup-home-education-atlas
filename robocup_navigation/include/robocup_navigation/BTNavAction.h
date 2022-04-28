@@ -62,6 +62,8 @@ public:
   {
     goal_ = new_goal;
     nav_need_send_goal_ = true;
+    nav_finished_ = false;
+    nav_succeded_ = false;
   }
 
   BT::NodeStatus tick()
