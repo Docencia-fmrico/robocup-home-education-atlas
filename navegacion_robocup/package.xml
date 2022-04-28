@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>navegacion_robocup</name>
+  <version>0.0.0</version>
+  <description>The navegacion_robocup package</description>
+
+  <maintainer email="fmrico@gmail.com">fmrico</maintainer>
+
+  <license>Apache 2</license>
+  <url type="website">https://www.aulavirtual.urjc.es/moodle/course/view.php?id=144699</url>
+
+  <author email="fmrico@gmail.com">Francisco Martín</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+ 
+  <build_depend>roscpp</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>behaviortree_cpp_v3</build_depend>
+  <build_depend>roslint</build_depend>
+  <build_depend>libzmq3-dev</build_depend>
+  <build_depend>actionlib_msgs</build_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>tf</build_depend>
+  <build_depend>pcl_ros</build_depend>
+
+  <build_export_depend>roscpp</build_export_depend>
+  <build_export_depend>std_msgs</build_export_depend>
+  <build_export_depend>geometry_msgs</build_export_depend>
+  <build_export_depend>behaviortree_cpp_v3</build_export_depend>
+  <build_export_depend>libzmq3-dev</build_export_depend>
+  <build_export_depend>actionlib_msgs</build_export_depend>
+
+  <exec_depend>roscpp</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>behaviortree_cpp_v3</exec_depend>
+  <exec_depend>libzmq3-dev</exec_depend>
+  <exec_depend>actionlib_msgs</exec_depend>
+  <exec_depend>rospy</exec_depend>
+  <exec_depend>tf</exec_depend>
+  <exec_depend>pcl_ros</exec_depend>
+
+  <export>
+  </export>
+</package>
