@@ -1,3 +1,6 @@
+results_topic: "/dialogflow_client/results"
+requests_topic: "/dialogflow_client/requests"
+start_srv: "/dialogflow_client/start"
 project_id: "obtenernombre-qfae"
 play_audio: false
 use_audio_server: false
