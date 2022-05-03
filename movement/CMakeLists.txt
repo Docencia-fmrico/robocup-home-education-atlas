@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(robocup_navigation)
+project(movement)
 
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_BUILD_TYPE Debug)
 
 set(CMAKE_CONFIG_PATH ${CMAKE_MODULE_PATH}  "${CMAKE_CURRENT_LIST_DIR}/cmake")
@@ -24,6 +25,7 @@ find_package(catkin REQUIRED COMPONENTS
   actionlib_msgs
   message_generation
   move_base_msgs
+  geometry_tf
   tf
 )
 
@@ -45,6 +47,7 @@ CATKIN_DEPENDS
   behaviortree_cpp_v3
   actionlib_msgs 
   move_base_msgs 
+  geometry_tf
   tf
 )
 
@@ -54,12 +57,20 @@ include_directories(
   ${ZMQ_INCLUDE_DIRS}
 )
 
-add_library(get_position_bt_node SHARED src/robocup_navigation/GetPosition.cpp)
-add_library(move_bt_node SHARED src/robocup_navigation/Move.cpp)
+add_library(${PROJECT_NAME} src/PIDController.cpp)
+
+add_library(approach_person_bt_node SHARED src/movement/ApproachPerson.cpp)
+add_library(get_position_bt_node SHARED src/movement/GetPosition.cpp)
+add_library(go_to_position_bt_node SHARED src/movement/GoToPosition.cpp)
+add_library(turn_bt_node SHARED src/movement/Turn.cpp)
 list(APPEND plugin_libs
+  approach_person_bt_node
   get_position_bt_node
-  move_bt_node
+  go_to_position_bt_node
+  turn_bt_node
 )
+
+target_link_libraries(approach_person_bt_node ${PROJECT_NAME})
 
 foreach(bt_plugin ${plugin_libs})
   target_link_libraries(${bt_plugin} ${catkin_LIBRARIES})
@@ -75,6 +86,8 @@ target_link_libraries(position_server_node ${catkin_LIBRARIES})
 roslint_cpp(
   src/move_node.cpp
   src/position_server_node.cpp
-  include/robocup_navigation/GetPosition.h src/robocup_navigation/GetPosition.cpp
-  include/robocup_navigation/Move.h src/robocup_navigation/Move.cpp
+  include/movement/ApproachPerson.h src/movement/ApproachPerson.cpp
+  include/movement/GetPosition.h src/movement/GetPosition.cpp
+  include/movement/GoToPosition.h src/movement/GoToPosition.cpp
+  include/movement/Turn.h src/movement/Turn.cpp
 )

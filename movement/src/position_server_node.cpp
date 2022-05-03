@@ -15,9 +15,9 @@
 #include "time.h"
 #include "ros/ros.h"
 
-#include "robocup_navigation/Position.h"
+#include "enum_pos.h"
+#include "movement/Position.h"
 #include "tf/transform_datatypes.h"
-#include "robocup_navigation/enum_pos.h"
 
 class PositionServer
 {
@@ -27,48 +27,38 @@ public:
     srand(time(NULL));
   }
 
-  bool position(robocup_navigation::Position::Request &req, robocup_navigation::Position::Response &res)
+  bool position(movement::Position::Request &req, movement::Position::Response &res)
   {
     int pos = req.goal;
 
     switch (pos)
     {
       case INIT_POS:
-        res.pos.position.x = 1.6;
-        res.pos.position.y = 4.6;
+        res.pos.position.x = 0.0;
+        res.pos.position.y = 0.0;
         res.pos.position.z = 0.0;
         res.pos.orientation = tf::createQuaternionMsgFromYaw(M_PI);
 
         break;
       case OP_POS:
-        res.pos.position.x = -3.7;
-        res.pos.position.y = 4.0;
+        res.pos.position.x = 5.0;
+        res.pos.position.y = -1.4;
         res.pos.position.z = 0.0;
         res.pos.orientation = tf::createQuaternionMsgFromYaw(M_PI);
 
         break;
-      case GUEST_1:
-        res.pos.position.x = 1.0;
-        res.pos.position.y = -1.5;
+      case GUEST_POS_1:
+        res.pos.position.x = 2.5;
+        res.pos.position.y = 3.0;
         res.pos.position.z = 0.0;
-        res.pos.orientation = tf::createQuaternionMsgFromYaw(-M_PI/2);
-        ROS_INFO("Guest 1");
+        res.pos.orientation = tf::createQuaternionMsgFromYaw(M_PI);
 
         break;
-      case GUEST_2:
-        res.pos.position.x = 1.7;
-        res.pos.position.y = -0.5;
-        res.pos.position.z = 0.0;
-        res.pos.orientation = tf::createQuaternionMsgFromYaw(0.0);
-        ROS_INFO("Guest 2");
-
-        break;
-      case GUEST_3:
-        res.pos.position.x = 1.0;
-        res.pos.position.y = 0.5;
+      case GUEST_POS_2:
+        res.pos.position.x = 2.6;
+        res.pos.position.y = 6.0;
         res.pos.position.z = 0.0;
         res.pos.orientation = tf::createQuaternionMsgFromYaw(M_PI/2);
-        ROS_INFO("Guest 3");
 
         break;
     }

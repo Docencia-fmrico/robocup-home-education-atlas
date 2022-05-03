@@ -1,16 +1,11 @@
  <root main_tree_to_execute = "MainTree" >
      <BehaviorTree ID="MainTree">
         <Sequence name="root_sequence">
-            <GetPosition name="get_position" goal="0" position="{position}"/>
-            <Move   name="move" position="{position}"/> 
-            <Repeat num_cycles="3">
-                <Sequence>
-                    <GetPosition name="get_position" goal="2" position="{position}"/>
-                    <Move   name="move" position="{position}"/> 
-                </Sequence>
-            </Repeat>
-            <GetPosition name="get_position" goal="1" position="{position}"/>
-            <Move   name="move" position="{position}"/> 
+            <ReactiveFallback>
+                <DetectPerson name="detect_person"/>
+                <Turn name="turn"/>
+            </ReactiveFallback>
+            <ApproachPerson name="approach_person"/>
         </Sequence>
      </BehaviorTree>
  </root>

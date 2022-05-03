@@ -14,8 +14,8 @@
 
 #include <string>
 
-#include "robocup_navigation/Move.h"
-#include "robocup_navigation/Goal.h"
+#include "movement/GoToPosition.h"
+#include "movement/Position.h"
 
 #include "behaviortree_cpp_v3/behavior_tree.h"
 
@@ -23,10 +23,10 @@
 
 #include <stdlib.h>
 
-namespace robocup_navigation
+namespace movement
 {
 
-Move::Move(
+GoToPosition::GoToPosition(
   const std::string& name,
   const std::string& action_name,
   const BT::NodeConfiguration& config)
@@ -35,13 +35,13 @@ Move::Move(
 }
 
 void
-Move::on_halt()
+GoToPosition::on_halt()
 {
-  ROS_INFO("Move halt");
+  ROS_INFO("GoToPosition halt");
 }
 
 void
-Move::on_start()
+GoToPosition::on_start()
 {
   move_base_msgs::MoveBaseGoal goal;
 
@@ -61,24 +61,24 @@ Move::on_start()
 
   set_goal(goal);
 
-  ROS_INFO("Move start");
+  ROS_INFO("GoToPosition start");
 }
 
 BT::NodeStatus
-Move::on_tick()
+GoToPosition::on_tick()
 {
-  ROS_INFO("Move tick");
+  ROS_INFO("GoToPosition tick");
 
   return BT::NodeStatus::RUNNING;
 }
 
 void
-Move::on_feedback(const move_base_msgs::MoveBaseFeedbackConstPtr& feedback)
+GoToPosition::on_feedback(const move_base_msgs::MoveBaseFeedbackConstPtr& feedback)
 {
 	ROS_INFO("Current position %lf %lf", feedback->base_position.pose.orientation.z, feedback->base_position.pose.orientation.w);
 }
 
-}  // namespace robocup_navigation
+}  // namespace movement
 
 #include "behaviortree_cpp_v3/bt_factory.h"
 BT_REGISTER_NODES(factory)
@@ -86,10 +86,10 @@ BT_REGISTER_NODES(factory)
     BT::NodeBuilder builder =
     [](const std::string & name, const BT::NodeConfiguration & config)
     {
-      return std::make_unique<robocup_navigation::Move>(
+      return std::make_unique<movement::GoToPosition>(
         name, "move_base", config);
     };
 
-  factory.registerBuilder<robocup_navigation::Move>(
-    "Move", builder);
+  factory.registerBuilder<movement::GoToPosition>(
+    "GoToPosition", builder);
 }

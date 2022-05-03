@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef ROBOCUP_NAVIGATION_BTACTION_H
-#define ROBOCUP_NAVIGATION_BTACTION_H
+#ifndef MOVEMENT_BTACTION_H
+#define MOVEMENT_BTACTION_H
 
 #include <ros/ros.h>
 
 #include "actionlib/client/simple_action_client.h"
 #include "move_base_msgs/MoveBaseAction.h"
 
-namespace robocup_navigation
+namespace movement
 {
 class BTNavAction : public BT::ActionNodeBase
 {
@@ -132,6 +132,6 @@ private:
   bool nav_succeded_;
 };
 
-}  // namespace robocup_navigation
+}  // namespace movement
 
-#endif  // ROBOCUP_NAVIGATION_BTACTION_H
+#endif  // MOVEMENT_BTACTION_H

@@ -17,30 +17,20 @@ endif()
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
-  geometry_msgs
   behaviortree_cpp_v3
   roslint
-  actionlib
-  actionlib_msgs
-  fsm_visual_behavior
-  robocup_navigation
+  movement
   vision
 )
 
 catkin_package(
-CATKIN_DEPENDS roscpp std_msgs behaviortree_cpp_v3 actionlib_msgs robocup_navigation vision
+CATKIN_DEPENDS roscpp std_msgs behaviortree_cpp_v3 robocup_navigation vision
 )
 
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
   ${ZMQ_INCLUDE_DIRS}
-)
-
-
-add_library(get_description_bt_node SHARED src/find_my_mates/GetDescription.cpp)
-list(APPEND plugin_libs
-  get_description_bt_node
 )
 
 foreach(bt_plugin ${plugin_libs})
@@ -54,6 +44,5 @@ target_link_libraries(find_my_mates_node ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
 
 roslint_cpp(
   src/find_my_mates_node.cpp
-  include/find_my_mates/GetDescription.h src/find_my_mates/GetDescription.cpp
 )
 

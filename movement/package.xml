@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>robocup_navigation</name>
+  <name>movement</name>
   <version>0.0.0</version>
-  <description>The robocup_navigation package</description>
+  <description>The movement package</description>
 
   <maintainer email="fmrico@gmail.com">fmrico</maintainer>
 
@@ -22,6 +22,7 @@
   <build_depend>actionlib_msgs</build_depend>
   <build_depend>message_generation</build_depend>
   <build_depend>move_base_msgs</build_depend>
+  <build_depend>geometry_tf</build_depend>
   <build_depend>tf</build_depend>
 
   <build_export_depend>roscpp</build_export_depend>
@@ -31,6 +32,7 @@
   <build_export_depend>libzmq3-dev</build_export_depend>
   <build_export_depend>actionlib_msgs</build_export_depend>
   <build_export_depend>move_base_msgs</build_export_depend>
+  <build_export_depend>geometry_tf</build_export_depend>
   <build_export_depend>tf</build_export_depend>
 
   <exec_depend>roscpp</exec_depend>
@@ -41,6 +43,7 @@
   <exec_depend>actionlib_msgs</exec_depend>
   <exec_depend>message_runtime</exec_depend>
   <exec_depend>move_base_msgs</exec_depend>
+  <exec_depend>geometry_tf</exec_depend>
   <exec_depend>tf</exec_depend>
 
   <export>

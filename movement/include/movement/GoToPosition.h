@@ -12,45 +12,48 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef FIND_MY_MATES_GETDESCRIPTION_H
-#define FIND_MY_MATES_GETDESCRIPTION_H
+#ifndef MOVEMENT_GOTOPOSITION_H
+#define MOVEMENT_GOTOPOSITION_H
 
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include "behaviortree_cpp_v3/bt_factory.h"
 
-#include <vision/ropa_hsv.h>
-#include <string>
+#include <move_base_msgs/MoveBaseAction.h>
+#include <geometry_msgs/Pose.h>
 
+#include "movement/BTNavAction.h"
+
+#include <string>
 #include "ros/ros.h"
 
-namespace find_my_mates
+namespace movement
 {
-class GetDescription : public BT::ActionNodeBase
+
+class GoToPosition : public BTNavAction
 {
   public:
-    explicit GetDescription(const std::string& name, const BT::NodeConfiguration& config);
+    explicit GoToPosition(const std::string& name,
+    const std::string& action_name,
+    const BT::NodeConfiguration& config);
 
-    void callback(const vision::ropa_hsv::ConstPtr msg);
-    
-    void halt();
-
-    BT::NodeStatus tick();
+    void on_halt() override;
+    BT::NodeStatus on_tick() override;
+    void on_start() override;
+    void on_feedback(const move_base_msgs::MoveBaseFeedbackConstPtr& feedback) override;
 
     static BT::PortsList providedPorts()
     {
         return 
-        { 
-            //BT::OutputPort<string>("description"),
+        {
+          BT::InputPort<geometry_msgs::Pose>("position") 
         };
     }
-
-  private:
-    ros::NodeHandle n_;
-    ros::Subscriber sub_;
     
-    int s_hupper_, s_hlower_, s_supper_, s_slower_, s_vupper_, s_vlower_;
-    int t_hupper_, t_hlower_, t_supper_, t_slower_, t_vupper_, t_vlower_;
+  private:
+    geometry_msgs::Pose pos_;
+    bool new_goal_;
 };
-}  // namespace find_my_mates
 
-#endif  // FIND_MY_MATES_GETDESCRIPTION_H
+}  // namespace movement
+
+#endif  // MOVEMENT_GOTOPOSITION_H

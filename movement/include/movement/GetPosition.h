@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef ROBOCUP_NAVIGATION_GETPOSITION_H
-#define ROBOCUP_NAVIGATION_GETPOSITION_H
+#ifndef MOVEMENT_GETPOSITION_H
+#define MOVEMENT_GETPOSITION_H
 
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include "behaviortree_cpp_v3/bt_factory.h"
@@ -23,8 +23,9 @@
 
 #include "ros/ros.h"
 
-namespace robocup_navigation
+namespace movement
 {
+
 class GetPosition : public BT::ActionNodeBase
 {
   public:
@@ -55,9 +56,8 @@ class GetPosition : public BT::ActionNodeBase
     int guests[MAX_GUESTS];
     int n_guests_;
     int guest_;
-
-    int ChooseGuest();
 };
-}  // namespace robocup_navigation
 
-#endif  // ROBOCUP_NAVIGATION_GETPOSITION_H
+}  // namespace movement
+
+#endif  // MOVEMENT_GETPOSITION_H

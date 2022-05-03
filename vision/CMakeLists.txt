@@ -58,6 +58,11 @@ include_directories(
   ${OpenCV_INCLUDE_DIRS}
 )
 
+add_library(detect_person_bt_node SHARED src/vision/DetectPerson.cpp)
+list(APPEND plugin_libs
+  detect_person_bt_node
+)
+
 
 foreach(bt_plugin ${plugin_libs})
   target_link_libraries(${bt_plugin} ${catkin_LIBRARIES})
@@ -68,3 +73,8 @@ endforeach()
 add_executable(nodo_bbx_msg_publisher_advanced src/nodo_bbx_msg_publisher_advanced.cpp)
 target_link_libraries(nodo_bbx_msg_publisher_advanced ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 add_dependencies(nodo_bbx_msg_publisher_advanced vision_generate_messages_cpp)
+
+roslint_cpp(
+  src/nodo_bbx_msg_publisher_advanced.cpp
+  include/vision/DetectPerson.h src/vision/DetectPerson.cpp
+)

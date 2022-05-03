@@ -12,18 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "robocup_navigation/GetPosition.h"
-#include "robocup_navigation/Position.h"
-#include "robocup_navigation/enum_pos.h"
+#include "movement/GetPosition.h"
+#include "movement/Position.h"
+#include "enum_pos.h"
 #include "time.h"
 
-namespace robocup_navigation
+namespace movement
 {
 
 GetPosition::GetPosition(const std::string& name, const BT::NodeConfiguration& config)
 : BT::ActionNodeBase(name, config), n_guests_(0), guest_(0), new_goal_(false)
 {
-  pos_client_ = n_.serviceClient<robocup_navigation::Position>("position");
+  pos_client_ = n_.serviceClient<movement::Position>("position");
   
   srand(time(NULL));
 
@@ -44,12 +44,7 @@ GetPosition::tick()
 
   goal_ = getInput<int>("goal").value();
 
-  if (goal_ == GUEST_POS)
-  {
-    goal_ = ChooseGuest();
-  }
-
-  robocup_navigation::Position srv;
+  movement::Position srv;
   srv.request.goal = goal_;
 
   if (pos_client_.call(srv))
@@ -72,59 +67,10 @@ GetPosition::tick()
   return BT::NodeStatus::SUCCESS;
 }
 
-int 
-GetPosition::ChooseGuest()
-{
-  if (n_guests_ == 0)
-  {
-    bool repeat = true;
-    do 
-    {
-      guest_ = rand() % GUEST_3 + GUEST_1;
-      ROS_INFO("first guest--------> %i", guest_);
-      // checks if the number of the guest is not greater than the last guest
-      repeat = guest_ > GUEST_3;
-    }
-    while (repeat);
-    guests[n_guests_] = guest_;
-    n_guests_++;
-  }
-  else if (n_guests_ < MAX_GUESTS)
-  {
-    new_goal_ = true;
-    bool repeated = true;
-    do 
-    {
-      guest_ = rand() % GUEST_3 + GUEST_1;
-      ROS_INFO("next guest--------> %i", guest_);
-      // checks that the guest is not repeated
-      for (int i = 0; i < n_guests_; i++)
-      {
-        if (guests[i] == guest_ || guest_ > GUEST_3) 
-          break;
-        repeated = guests[i] != guest_ && i != n_guests_-1;
-      }
-    }
-    while (repeated);
-    
-    guests[n_guests_] = guest_;
-    n_guests_++;
-  }
-  else
-  {
-    n_guests_ = 0;
-
-    for (int i = 0; i < n_guests_; i++)
-      guests[i] = 0;
-  }
-  
-  return guest_;
-}
-
-}  // namespace robocup_navigation
+}  // namespace movement
 
 #include "behaviortree_cpp_v3/bt_factory.h"
 BT_REGISTER_NODES(factory)
 {
-  factory.registerNodeType<robocup_navigation::GetPosition>("GetPosition");
+  factory.registerNodeType<movement::GetPosition>("GetPosition");
 }

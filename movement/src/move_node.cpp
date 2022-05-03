@@ -26,18 +26,18 @@
 
 int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "robocup_navigation");
+  ros::init(argc, argv, "movement");
   ros::NodeHandle n;
 
   BT::BehaviorTreeFactory factory;
   BT::SharedLibrary loader;
 
   factory.registerFromPlugin(loader.getOSName("get_position_bt_node"));
-  factory.registerFromPlugin(loader.getOSName("move_bt_node"));
+  factory.registerFromPlugin(loader.getOSName("go_to_position_bt_node"));
 
   auto blackboard = BT::Blackboard::create();
 
-  std::string pkgpath = ros::package::getPath("robocup_navigation");
+  std::string pkgpath = ros::package::getPath("movement");
   std::string xml_file = pkgpath + "/behavior_tree_xml/behavior_tree.xml";
 
   BT::Tree tree = factory.createTreeFromFile(xml_file, blackboard);
