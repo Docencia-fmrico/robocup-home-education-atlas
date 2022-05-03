@@ -3,6 +3,7 @@ project(fsm_robocup)
 
 # set(CMAKE_BUILD_TYPE Debug)
 
+set (CMAKE_CXX_STANDARD 17)
 set(CMAKE_CONFIG_PATH ${CMAKE_MODULE_PATH}  "${CMAKE_CURRENT_LIST_DIR}/cmake")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CONFIG_PATH}")
 
@@ -16,6 +17,7 @@ endif()
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
+  sensor_msgs
   std_msgs
   geometry_msgs
   behaviortree_cpp_v3
@@ -27,6 +29,7 @@ find_package(catkin REQUIRED COMPONENTS
   cv_bridge
   image_transport
   message_generation
+  geometry_msgs
 )
 
 add_message_files(
@@ -41,8 +44,10 @@ generate_messages(
 )
 
 catkin_package(
+  INCLUDE_DIRS include
 CATKIN_DEPENDS 
   roscpp 
+  sensor_msgs
   std_msgs 
   behaviortree_cpp_v3 
   actionlib_msgs 
@@ -50,6 +55,7 @@ CATKIN_DEPENDS
   cv_bridge
   image_transport
   message_runtime
+  geometry_msgs
 )
 
 include_directories(
@@ -60,14 +66,41 @@ include_directories(
 )
 
 add_library(asr_move2_bt_node SHARED src/behavior_trees/Move.cpp)
+
+add_library(behavior_trees 
+  src/behavior_trees/PIDController.cpp
+  /home/adrian/Escritorio/catking_ws/src/software_arq_robots_course/geometry_tf/src/geometry_tf/transforms.cpp
+)
+
+add_library(asr_robocup_turn_node SHARED src/behavior_trees/Turn.cpp)
+add_library(asr_robocup_person_detected_node SHARED src/behavior_trees/Person_Detected.cpp)
+add_library(asr_robocup_follow_person_node SHARED src/behavior_trees/Follow_Person.cpp)
+
+
 list(APPEND plugin_libs
-  asr_move2_bt_node
+  asr_robocup_turn_node
+  asr_robocup_person_detected_node
+  asr_robocup_follow_person_node
 )
 
 foreach(bt_plugin ${plugin_libs})
   target_link_libraries(${bt_plugin} ${catkin_LIBRARIES})
   target_compile_definitions(${bt_plugin} PRIVATE BT_PLUGIN_EXPORT)
 endforeach()
+
+set(LINK_LIBS
+  fsm_visual_behavior
+  ${catkin_LIBRARIES}
+)
+
+add_definitions(${PCL_DEFINITIONS})
+
+add_executable(nodo_prueba_1 
+  src/nodo_prueba_1.cpp
+  src/behavior_trees/PIDController.cpp
+)
+target_link_libraries(nodo_prueba_1 ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
+add_dependencies(nodo_prueba_1 fsm_visual_behavior_generate_messages_cpp)
 
 add_executable(nodo_behavior_trees_robocup 
   src/nodo_behavior_trees_robocup.cpp

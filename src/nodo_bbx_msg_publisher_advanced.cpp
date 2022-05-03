@@ -57,68 +57,69 @@ public:
 };
 
 void callback_bbx(const sensor_msgs::ImageConstPtr& image, const darknet_ros_msgs::BoundingBoxesConstPtr& boxes, bbx_info *mensajero)
+{
+  cv_bridge::CvImagePtr img_ptr_depth;
+  std::string str_person ("person");
+
+  int object_center_x, object_center_y;
+  try{
+      img_ptr_depth = cv_bridge::toCvCopy(*image, sensor_msgs::image_encodings::TYPE_32FC1);
+  }
+  catch (cv_bridge::Exception& e)
   {
-    cv_bridge::CvImagePtr img_ptr_depth;
-    std::string str_person ("person");
-    try{
-        img_ptr_depth = cv_bridge::toCvCopy(*image, sensor_msgs::image_encodings::TYPE_32FC1);
-    }
-    catch (cv_bridge::Exception& e)
-    {
-      ROS_ERROR("cv_bridge exception:  %s", e.what());
-      return;
-    }
-    for (const auto & box : boxes->bounding_boxes) {
-      if(str_person.compare(box.Class) == 0 && box.probability > 0.8){
-        mensajero->px = (box.xmax + box.xmin) / 2;
-        mensajero->py = (box.ymax + box.ymin) / 2;
-        mensajero->bbx_xmin = box.xmin;
-        mensajero->bbx_ymin = box.ymin;
-        mensajero->bbx_xmax = box.xmax;
-        mensajero->bbx_ymax = box.ymax;
+    ROS_ERROR("cv_bridge exception:  %s", e.what());
+    return;
+  }
+  for (const auto & box : boxes->bounding_boxes) {
+    if(str_person.compare(box.Class) == 0 && box.probability > 0.6){
+      mensajero->px = (box.xmax + box.xmin) / 2;
+      mensajero->py = (box.ymax + box.ymin) / 2;
+      mensajero->bbx_xmin = box.xmin;
+      mensajero->bbx_ymin = box.ymin;
+      mensajero->bbx_xmax = box.xmax;
+      mensajero->bbx_ymax = box.ymax;
 
-        mensajero->dist = img_ptr_depth->image.at<float>(cv::Point(mensajero->px, mensajero->py))* 0.001f;//* 0.001f
-
-        std::cerr << box.Class << " at (" << mensajero->dist <<"px: "<< mensajero->px << "py: "<< mensajero->py << std::endl;
-        mensajero->publicar();
-      }
+      mensajero->dist = img_ptr_depth->image.at<float>(cv::Point(mensajero->px, mensajero->py))* 0.001f;//* 0.001f
+      std::cerr << box.Class << " at (" << mensajero->dist <<"px: "<< mensajero->px << "py: "<< mensajero->py << std::endl;
+      mensajero->publicar();
     }
   }
+}
 
-  std::string nombrar_color(int color){
+std::string nombrar_color(int color){
 
-    std::string color_name;
-    switch (color){
-      case 0:
-        color_name = "blanco";
-        break;
-      case 1:
-        color_name = "negro";
-        break;
-      case 2:
-        color_name = "rojo";
-        break;
-      case 3:
-        color_name = "naranja";
-        break;
-      case 4:
-        color_name = "amarillo";
-        break;
-      case 5:
-        color_name = "verde";
-        break;
-      case 6:
-        color_name = "azul";
-        break;
-      case 7:
-        color_name = "morado";
-        break;
-      case 8:
-        color_name = "rosa";
-        break;
-    }
-    return color_name;
+  std::string color_name;
+  switch (color){
+    case 0:
+      color_name = "blanco";
+      break;
+    case 1:
+      color_name = "negro";
+      break;
+    case 2:
+      color_name = "rojo";
+      break;
+    case 3:
+      color_name = "naranja";
+      break;
+    case 4:
+      color_name = "amarillo";
+      break;
+    case 5:
+      color_name = "verde";
+      break;
+    case 6:
+      color_name = "azul";
+      break;
+    case 7:
+      color_name = "morado";
+      break;
+    case 8:
+      color_name = "rosa";
+      break;
   }
+  return color_name;
+}
 
   void detectar_color(cv::Mat img_ptr_rgb, bbx_info *mensajero){
     cv::Mat rgb, hsv, mask_blanco_vis, mask_blanco, mask_rojo1, mask_rojo2, mask_rojo, mask_rojo_vis;
