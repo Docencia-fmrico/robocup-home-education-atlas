@@ -1,11 +1,11 @@
 <root main_tree_to_execute = "MainTree" >
      <BehaviorTree ID="MainTree">
         <Sequence name="root_sequence">
-            <GetPosition name="get_position" goal="2" position="{position}"/>
-            <GoToPosition   name="move" position="{position}"/>
-            <!--GetPosition name="get_position" goal="3" position="{position}"/>
-            <GoToPosition   name="move" position="{position}"/>
             <GetPosition name="get_position" goal="1" position="{position}"/>
+            <GoToPosition   name="move" position="{position}"/>
+            <!--GetPosition name="get_position" goal="1" position="{position}"/>
+            <GoToPosition   name="move" position="{position}"/>
+            <GetPosition name="get_position" goal="0" position="{position}"/>
             <GoToPosition   name="move" position="{position}"/-->
         </Sequence>
     </BehaviorTree>

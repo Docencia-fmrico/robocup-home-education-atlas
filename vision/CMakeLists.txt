@@ -1,5 +1,7 @@
-cmake_minimum_required(VERSION 3.0.2)
+cmake_minimum_required(VERSION 2.8.3)
 project(vision)
+
+set (CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_CONFIG_PATH ${CMAKE_MODULE_PATH}  "${CMAKE_CURRENT_LIST_DIR}/cmake")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CONFIG_PATH}")
@@ -14,6 +16,7 @@ endif()
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
+  sensor_msgs
   std_msgs
   geometry_msgs
   behaviortree_cpp_v3
@@ -24,14 +27,17 @@ find_package(catkin REQUIRED COMPONENTS
   OpenCV
   cv_bridge
   image_transport
+  tf
+  pcl_conversions
+  pcl_ros
   message_generation
 )
 
 add_message_files(
   FILES 
   bbx_info.msg
-  ropa_hsv.msg
   clothes.msg
+  ropa_hsv.msg
 )
 
 generate_messages(
@@ -40,14 +46,19 @@ generate_messages(
 )
 
 catkin_package(
+  INCLUDE_DIRS include
 CATKIN_DEPENDS 
   roscpp 
+  sensor_msgs
   std_msgs 
   behaviortree_cpp_v3 
   actionlib_msgs 
   move_base_msgs 
   cv_bridge
   image_transport
+  tf
+  pcl_conversions
+  pcl_ros
   message_runtime
 )
 
@@ -57,6 +68,8 @@ include_directories(
   ${ZMQ_INCLUDE_DIRS}
   ${OpenCV_INCLUDE_DIRS}
 )
+
+add_definitions(${PCL_DEFINITIONS})
 
 add_library(detect_person_bt_node SHARED src/vision/DetectPerson.cpp)
 list(APPEND plugin_libs
@@ -69,12 +82,22 @@ foreach(bt_plugin ${plugin_libs})
   target_compile_definitions(${bt_plugin} PRIVATE BT_PLUGIN_EXPORT)
 endforeach()
 
+set(LINK_LIBS
+  fsm_visual_behavior
+  ${catkin_LIBRARIES}
+)
+
+add_definitions(${PCL_DEFINITIONS})
 
 add_executable(nodo_bbx_msg_publisher_advanced src/nodo_bbx_msg_publisher_advanced.cpp)
 target_link_libraries(nodo_bbx_msg_publisher_advanced ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 add_dependencies(nodo_bbx_msg_publisher_advanced vision_generate_messages_cpp)
 
+add_executable(person_tf_node src/person_tf_node.cpp)
+target_link_libraries(person_tf_node ${catkin_LIBRARIES})
+
 roslint_cpp(
   src/nodo_bbx_msg_publisher_advanced.cpp
+  src/person_tf_node.cpp
   include/vision/DetectPerson.h src/vision/DetectPerson.cpp
 )

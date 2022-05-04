@@ -1,0 +1,8 @@
+<launch>
+    <!--include file="$(find navigation)/launch/navigation.launch">
+        <arg name="map_file" value="$(find movement)/maps/map_robocup.yaml"/>
+    </include-->
+    
+    <node pkg="movement" type="position_server_node" name="position_server" output="screen"></node>
+    <node pkg="movement" type="move_node" name="Navigation" output="screen"></node>
+</launch>

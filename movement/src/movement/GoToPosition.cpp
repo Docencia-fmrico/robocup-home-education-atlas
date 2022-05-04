@@ -75,7 +75,7 @@ GoToPosition::on_tick()
 void
 GoToPosition::on_feedback(const move_base_msgs::MoveBaseFeedbackConstPtr& feedback)
 {
-	ROS_INFO("Current position %lf %lf", feedback->base_position.pose.orientation.z, feedback->base_position.pose.orientation.w);
+	ROS_INFO("Current position %lf %lf", feedback->base_position.pose.position.x, feedback->base_position.pose.position.y);
 }
 
 }  // namespace movement

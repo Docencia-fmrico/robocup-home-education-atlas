@@ -50,12 +50,6 @@ class GetPosition : public BT::ActionNodeBase
     
     geometry_msgs::Pose pos_;
     int goal_;
-    bool new_goal_;
-
-    static const int MAX_GUESTS = 3;
-    int guests[MAX_GUESTS];
-    int n_guests_;
-    int guest_;
 };
 
 }  // namespace movement

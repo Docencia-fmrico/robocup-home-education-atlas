@@ -22,10 +22,7 @@
 class PositionServer
 {
 public:
-  PositionServer()
-  { 
-    srand(time(NULL));
-  }
+  PositionServer(){ }
 
   bool position(movement::Position::Request &req, movement::Position::Response &res)
   {
@@ -47,16 +44,9 @@ public:
         res.pos.orientation = tf::createQuaternionMsgFromYaw(M_PI);
 
         break;
-      case GUEST_POS_1:
-        res.pos.position.x = 2.5;
-        res.pos.position.y = 3.0;
-        res.pos.position.z = 0.0;
-        res.pos.orientation = tf::createQuaternionMsgFromYaw(M_PI);
-
-        break;
-      case GUEST_POS_2:
-        res.pos.position.x = 2.6;
-        res.pos.position.y = 6.0;
+      case GUESTS_POS:
+        res.pos.position.x = 3.4;
+        res.pos.position.y = 4.6;
         res.pos.position.z = 0.0;
         res.pos.orientation = tf::createQuaternionMsgFromYaw(M_PI/2);
 

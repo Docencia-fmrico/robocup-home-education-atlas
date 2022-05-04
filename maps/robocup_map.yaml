@@ -1,4 +1,4 @@
-image: map_robocup.pgm
+image: robocup_map.pgm
 resolution: 0.020000
 origin: [-17.640000, -22.120000, 0.000000]
 negate: 0

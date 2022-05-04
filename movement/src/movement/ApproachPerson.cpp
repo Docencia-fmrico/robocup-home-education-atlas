@@ -40,21 +40,15 @@ ApproachPerson::messageCallback(const vision::bbx_info::ConstPtr& msg){
 void
 ApproachPerson::halt()
 {
-  ROS_INFO("ApproachPerson halt");
+  ROS_INFO("finished going forward");
 }
 
 BT::NodeStatus
 ApproachPerson::tick()
-{ 
+{
   ROS_INFO("ApproachPerson tick");
-  
-  if(dist < 0.5*0.001)
-  {
-    return BT::NodeStatus::SUCCESS;
-  }
-  
   geometry_msgs::Twist vel_msgs;
-  double speed_clamped = std::clamp(dist-0.8, -5.0, 5.0);
+  double speed_clamped = std::clamp(dist -1, -5.0, 5.0);
   double angle_clamped = (px-320)/(-100);
 
   float speed_pid = velocity_pid.get_output(speed_clamped)*1.0f;

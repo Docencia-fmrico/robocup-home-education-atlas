@@ -24,7 +24,7 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 catkin_package(
-CATKIN_DEPENDS roscpp std_msgs behaviortree_cpp_v3 robocup_navigation vision
+CATKIN_DEPENDS roscpp std_msgs behaviortree_cpp_v3 movement vision
 )
 
 include_directories(

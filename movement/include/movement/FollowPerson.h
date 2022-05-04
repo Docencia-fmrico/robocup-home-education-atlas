@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef MOVEMENT_APPROACHPERSON_H
-#define MOVEMENT_APPROACHPERSON_H
+#ifndef MOVEMENT_FOLLOWPERSON_H
+#define MOVEMENT_FOLLOWPERSON_H
 
 #include <algorithm>
 #include <string>
@@ -24,7 +24,6 @@
 #include <tf/transform_listener.h>
 #include <geometry_msgs/Pose.h>
 
-#include "PIDController.h"
 #include "vision/bbx_info.h"
 
 #include "ros/ros.h"
@@ -32,26 +31,28 @@
 namespace movement
 {
 
-class ApproachPerson : public BT::ActionNodeBase
+class FollowPerson : public BT::ActionNodeBase
 {
   public:
-    ros::NodeHandle n_;
-    double dist;
-    int px;
-    explicit ApproachPerson(const std::string& name);
-    void messageCallback(const vision::bbx_info::ConstPtr& msg);
+    explicit FollowPerson(const std::string& name, const BT::NodeConfiguration& config);
+
     void halt();
+
     BT::NodeStatus tick();
+
+    static BT::PortsList providedPorts()
+    {
+        return { BT::OutputPort<geometry_msgs::Pose>("position") };
+    }
 
   private:
     static constexpr float GOING_FORWARD_VEL = 0.3;
-    ros::Publisher pub_vel_;
-    ros::Subscriber sub_;
-    br2_tracking::PIDController velocity_pid;
-    br2_tracking::PIDController turn_pid;
-  };
 
+    tf::TransformListener listener_;
+
+    geometry_msgs::Pose person_pose_;
+};
 
 }  // namespace movement
 
-#endif  // MOVEMENT_APPROACHPERSON_H
+#endif  // MOVEMENT_FOLLOWPERSON_H

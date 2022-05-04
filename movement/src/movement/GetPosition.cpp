@@ -21,14 +21,9 @@ namespace movement
 {
 
 GetPosition::GetPosition(const std::string& name, const BT::NodeConfiguration& config)
-: BT::ActionNodeBase(name, config), n_guests_(0), guest_(0), new_goal_(false)
+: BT::ActionNodeBase(name, config)
 {
   pos_client_ = n_.serviceClient<movement::Position>("position");
-  
-  srand(time(NULL));
-
-  for (int i = 0; i < n_guests_; i++)
-    guests[i] = 0;
 }
 
 void
