@@ -7,5 +7,6 @@
     <include file="$(find dialogflow_ros)/launch/dialogflow.launch" >
         <arg name="google_application_credentials" value="$(arg google_application_credentials)"/>
         <arg name="config_file" value="$(arg config_file)"/>
+
   </include>
 </launch>

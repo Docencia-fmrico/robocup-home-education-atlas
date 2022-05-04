@@ -1,3 +1,7 @@
+cmake_minimum_required(VERSION 3.0.2)
+project(carry_my_luggage_dialog)
+
+
 # Copyright 2022 Team Atlas
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +19,7 @@
 
 
 cmake_minimum_required(VERSION 3.0.2)
-project(dialog_atlas)
+project(carry_my_luggage_dialog)
 
 set(CMAKE_BUILD_TYPE Debug)
 
@@ -49,11 +53,10 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 
-add_message_files(
-  FILES 
-  get_name.msg
-  activate_msg.msg
-)
+#add_message_files(
+#  FILES 
+ 
+#)
 
 
 generate_messages(
@@ -84,52 +87,24 @@ include_directories(
 
 
 add_library(${PROJECT_NAME}
-  src/dialog_atlas/Get_Name.cpp
-  src/dialog_atlas/GiveDescription.cpp
-  src/dialog_atlas/Application.cpp
-  src/dialog_atlas/Prueba.cpp
+  src/carry_my_luggage_dialog/Get_Luggage.cpp
 
  )
 
 
 
-foreach(bt_plugin ${plugin_libs})
-  target_link_libraries(${bt_plugin} ${catkin_LIBRARIES})
-  target_compile_definitions(${bt_plugin} PRIVATE BT_PLUGIN_EXPORT)
-endforeach()
+add_executable(get_luggage_node src/carry_my_luggage_dialog/Get_Luggage.cpp)
+add_dependencies(get_luggage_node ${catkin_EXPORTED_TARGETS})
+target_link_libraries(get_luggage_node ${catkin_LIBRARIES} carry_my_luggage_dialog
+)
 
-#add_executable(get_name_node src/dialog_atlas/Get_Name.cpp)
-#add_dependencies(get_name_node ${catkin_EXPORTED_TARGETS})
-#target_link_libraries(get_name_node ${catkin_LIBRARIES} dialog_atlas)
-
-add_executable(pub_name_node src/dialog_topic.cpp)
-target_link_libraries(pub_name_node ${catkin_LIBRARIES} dialog_atlas)
-add_dependencies(pub_name_node dialog_atlas_generate_messages_cpp)
-
-
-add_executable(pub_activate_node src/activate_topic.cpp)
-target_link_libraries(pub_activate_node ${catkin_LIBRARIES} dialog_atlas)
-add_dependencies(pub_activate_node dialog_atlas_generate_messages_cpp)
-
-add_executable(give_description_node src/give_description_node.cpp)
-target_link_libraries(give_description_node ${catkin_LIBRARIES} dialog_atlas)
 
 
 
 
 roslint_cpp(
- src/dialog_atlas/Get_Name.cpp
+ src/dialog_atlas/Get_Luggage.cpp
  
- src/get_name_node.cpp
- src/give_description_node.cpp
- src/dialog_atlas/GiveDescription.cpp
- src/dialog_atlas/Application.cpp
- src/dialog_atlas/Prueba.cpp
-
-
- include/dialog_atlas/GiveDescription.h 
- include/dialog_atlas/Prueba.h 
-
  
  
 )
