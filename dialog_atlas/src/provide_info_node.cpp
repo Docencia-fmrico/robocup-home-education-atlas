@@ -16,7 +16,7 @@
 #include <string>
 #include <memory>
 
-#include "dialog_atlas/GiveDescription.h"
+#include "dialog_atlas/ProvideInfo.h"
 
 #include "ros/ros.h"
 #include "ros/package.h"
@@ -34,7 +34,7 @@ int main(int argc, char **argv)
   BT::BehaviorTreeFactory factory;
   BT::SharedLibrary loader;
 
-  factory.registerFromPlugin(loader.getOSName("give_name_bt_node"));
+  factory.registerFromPlugin(loader.getOSName("provide_info_bt_node"));
 
   auto blackboard = BT::Blackboard::create();
 

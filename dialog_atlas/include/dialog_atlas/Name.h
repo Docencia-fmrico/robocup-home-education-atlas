@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef PRUEBA_H
-#define PRUEBA_H
+#ifndef NAME_H
+#define NAME_H
 
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include "behaviortree_cpp_v3/bt_factory.h"
@@ -29,10 +29,10 @@
 namespace dialog_atlas
 {
 
-class Prueba : public BT::ActionNodeBase
+class Name : public BT::ActionNodeBase
 {
   public:
-    explicit Prueba(const std::string& name);
+    explicit Name(const std::string& name);
 
     void messageCallback(const dialog_atlas::activate_msg::ConstPtr& msg);
     void halt();
@@ -41,12 +41,15 @@ class Prueba : public BT::ActionNodeBase
 
   private:
 
+    BT::NodeStatus status_;
+
     ros::Subscriber sub_;
     ros::NodeHandle n_;
+
     bool activate;
 
 };
 
 }  // namespace movement
 
-#endif  // PRUEBA_H
+#endif  // Name_H

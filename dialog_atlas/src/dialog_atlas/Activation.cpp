@@ -15,20 +15,20 @@
 
 #include <ros/ros.h>
 
-#include "dialog_atlas/Application.h"
+#include "dialog_atlas/Activation.h"
 #include "dialog_atlas/activate_msg.h"
 
 
 
 namespace dialog_atlas
 {
-    Application::Application(): nh_()
+    Activation::Activation(): nh_()
     {
         pub_ = nh_.advertise<dialog_atlas::activate_msg>("/activate_dialog",1);
     }
 
 
-    void Application::activate(bool activate_dialog)
+    void Activation::activate(bool activate_dialog)
     {
         dialog_atlas::activate_msg msg;
         msg.activate = activate_dialog;

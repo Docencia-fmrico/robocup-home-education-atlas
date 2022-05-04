@@ -1,7 +1,7 @@
 
 
-#ifndef APPLICATION__H
-#define APPLICATION__H
+#ifndef ACTIVATION__H
+#define ACTIVATION__H
 
 #include <ros/ros.h>
 
@@ -9,11 +9,11 @@
 
 namespace dialog_atlas
 {
-class Application
+class Activation
 {
 public:
   
-  Application();
+  Activation();
 
   void activate(bool activate_dialog);
 

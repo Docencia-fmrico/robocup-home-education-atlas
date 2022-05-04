@@ -85,9 +85,9 @@ include_directories(
 
 add_library(${PROJECT_NAME}
   src/dialog_atlas/Get_Name.cpp
-  src/dialog_atlas/GiveDescription.cpp
-  src/dialog_atlas/Application.cpp
-  src/dialog_atlas/Prueba.cpp
+  src/dialog_atlas/ProvideInfo.cpp
+  src/dialog_atlas/Activation.cpp
+  src/dialog_atlas/Name.cpp
 
  )
 
@@ -98,9 +98,6 @@ foreach(bt_plugin ${plugin_libs})
   target_compile_definitions(${bt_plugin} PRIVATE BT_PLUGIN_EXPORT)
 endforeach()
 
-#add_executable(get_name_node src/dialog_atlas/Get_Name.cpp)
-#add_dependencies(get_name_node ${catkin_EXPORTED_TARGETS})
-#target_link_libraries(get_name_node ${catkin_LIBRARIES} dialog_atlas)
 
 add_executable(pub_name_node src/dialog_topic.cpp)
 target_link_libraries(pub_name_node ${catkin_LIBRARIES} dialog_atlas)
@@ -111,8 +108,8 @@ add_executable(pub_activate_node src/activate_topic.cpp)
 target_link_libraries(pub_activate_node ${catkin_LIBRARIES} dialog_atlas)
 add_dependencies(pub_activate_node dialog_atlas_generate_messages_cpp)
 
-add_executable(give_description_node src/give_description_node.cpp)
-target_link_libraries(give_description_node ${catkin_LIBRARIES} dialog_atlas)
+add_executable(provide_info_node src/provide_info_node.cpp)
+target_link_libraries(provide_info_node ${catkin_LIBRARIES} dialog_atlas)
 
 
 
@@ -121,14 +118,15 @@ roslint_cpp(
  src/dialog_atlas/Get_Name.cpp
  
  src/get_name_node.cpp
- src/give_description_node.cpp
- src/dialog_atlas/GiveDescription.cpp
- src/dialog_atlas/Application.cpp
- src/dialog_atlas/Prueba.cpp
+ src/provide_info_node.cpp
+ src/dialog_atlas/ProvideInfo.cpp
+ src/dialog_atlas/Activation.cpp
+ src/dialog_atlas/Name.cpp
 
 
- include/dialog_atlas/GiveDescription.h 
- include/dialog_atlas/Prueba.h 
+ include/dialog_atlas/Activation.h 
+ include/dialog_atlas/ProvideInfo.h 
+ include/dialog_atlas/Name.h 
 
  
  

@@ -1,5 +1,5 @@
-#ifndef GIVE_DESCRIPTION__H
-#define GIVE_DESCRIPTION__H
+#ifndef PROVIDEINFO__H
+#define PROVIDEINFO__H
 
 #include <ros/ros.h>
 #include "dialog_atlas/get_name.h"
@@ -11,16 +11,15 @@
 
 namespace dialog_atlas
 {
-class GiveDescription: public BT::ActionNodeBase
+class ProvideInfo: public BT::ActionNodeBase
 {
 public:
 
-  explicit GiveDescription(const std::string& name);
+  explicit ProvideInfo(const std::string& name);
   
   void nameCallback(const dialog_atlas::get_name::ConstPtr& msg);
   void halt();
   BT::NodeStatus tick();
-  //void description();
  
 
 private:

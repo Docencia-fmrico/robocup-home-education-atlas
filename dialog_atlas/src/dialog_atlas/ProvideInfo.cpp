@@ -12,54 +12,62 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <string>
 
 
-#include "behaviortree_cpp_v3/behavior_tree.h"
-
-#include "dialog_atlas/Prueba.h"
-#include "dialog_atlas/activate_msg.h"
 
 
 #include "ros/ros.h"
 
+#include "behaviortree_cpp_v3/behavior_tree.h"
+
+#include "dialog_atlas/Get_Name.h"
+#include "dialog_atlas/ProvideInfo.h"
+#include "dialog_atlas/get_name.h"
+
 namespace dialog_atlas
 {
 
-Prueba::Prueba(const std::string& name)
-: BT::ActionNodeBase(name, {})
+
+ProvideInfo::ProvideInfo(const std::string& name)
+: BT::ActionNodeBase(name, {}), nh_()
 {
-  sub_ = n_.subscribe("activate_topic", 1, &dialog_atlas::Prueba::messageCallback, this);
+    sub_name_ = nh_.subscribe("/get_name", 1, &ProvideInfo::nameCallback, this);
+    //sub_description = nh_.subscribe("/scan_filtered", 1, &BumpGo_Advanced_Laser::laserCallback, this);
 }
-
-
-void Prueba::messageCallback(const dialog_atlas::activate_msg::ConstPtr& msg)
-{
-  activate = msg->activate;
-
-}
-
 
 
 void
-Prueba::halt()
+ProvideInfo::nameCallback(const dialog_atlas::get_name::ConstPtr& msg)
 {
-  ROS_INFO("Dialog halt");
+    name_ = msg->name;
 }
+
+
+void
+ProvideInfo::halt()
+{
+  ROS_INFO("ProvideInfo halt");
+}
+
+
 
 BT::NodeStatus
-Prueba::tick()
+ProvideInfo::tick()
 {
-  ROS_INFO("Dialog tick");
-  //pub_vel_.publish(cmd);
+  Get_Name name_obtained;
+  name_obtained.speak(name_);
   return BT::NodeStatus::RUNNING;
-  
 }
 
-}  // namespace dialog_atlas
+   
+}
+
 
 #include "behaviortree_cpp_v3/bt_factory.h"
 BT_REGISTER_NODES(factory)
 {
-  factory.registerNodeType<dialog_atlas::Prueba>("Prueba");
+  factory.registerNodeType<dialog_atlas::ProvideInfo>("ProvideInfo");
 }
+
+
+
