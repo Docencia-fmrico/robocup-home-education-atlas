@@ -40,6 +40,7 @@ class GetPosition : public BT::ActionNodeBase
         return 
         { 
           BT::InputPort<int>("goal"),
+          BT::OutputPort<bool>("new_goal"),
           BT::OutputPort<geometry_msgs::Pose>("position") 
         };
     }

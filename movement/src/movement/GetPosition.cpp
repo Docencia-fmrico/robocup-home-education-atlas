@@ -58,6 +58,7 @@ GetPosition::tick()
   }
 
   setOutput<geometry_msgs::Pose>("position", pos_);
+  setOutput<bool>("new_goal", false);
   return BT::NodeStatus::SUCCESS;
 }
 

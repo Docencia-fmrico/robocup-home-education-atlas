@@ -97,6 +97,7 @@ public:
     if (nav_finished_)
     {
       if (nav_succeded_) {
+        ROS_INFO("Posicion alcanzada");
         return BT::NodeStatus::SUCCESS;
       }
       else
