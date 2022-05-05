@@ -26,10 +26,13 @@ private:
 
 
   std::string name_;
+  std::string description_;
+  std::string object_;
 
   ros::NodeHandle nh_;
   ros::Subscriber sub_name_;
   ros::Subscriber sub_description_;
+  ros::Subscriber sub_object_;
 
 };
 };  // namespace dialog_atlas

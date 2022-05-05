@@ -60,10 +60,9 @@ namespace dialog_atlas
         }
     }
 
-    if (param_name_ == "Get Name Intent")
-    {
-      keep_listening_ = false;
-    }
+    
+    keep_listening_ = false;
+    
 
   }
    
@@ -78,7 +77,7 @@ namespace dialog_atlas
       for (const auto & value : param.value){  
         check_ = value;
         }
-    }
+      }
 
     if (check_ == "Yes")
     {

@@ -20,6 +20,7 @@ public:
     void checkNameIntentCB(dialogflow_ros_msgs::DialogflowResult result);
 
     void dialog();
+    bool obtain_name();
     bool stop_node();
     
 
@@ -41,7 +42,7 @@ public:
     bool keep_listening_2_;
     bool stop_;
     
-   
+    
 
     int state_;
 

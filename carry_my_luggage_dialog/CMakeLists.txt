@@ -50,6 +50,7 @@ find_package(catkin REQUIRED COMPONENTS
     behaviortree_cpp_v3
     message_generation
     gb_dialog
+    dialog_atlas
 )
 
 
@@ -75,6 +76,7 @@ catkin_package(
   behaviortree_cpp_v3
   gb_dialog
   std_msgs
+  dialog_atlas
 )
 
 
@@ -93,17 +95,16 @@ add_library(${PROJECT_NAME}
 
 
 
-add_executable(get_luggage_node src/carry_my_luggage_dialog/Get_Luggage.cpp)
+add_executable(get_luggage_node src/get_luggage_node.cpp)
 add_dependencies(get_luggage_node ${catkin_EXPORTED_TARGETS})
-target_link_libraries(get_luggage_node ${catkin_LIBRARIES} carry_my_luggage_dialog
-)
+target_link_libraries(get_luggage_node ${catkin_LIBRARIES} carry_my_luggage_dialog)
 
 
 
 
 
 roslint_cpp(
- src/dialog_atlas/Get_Luggage.cpp
+ src/carry_my_luggage_dialog/Get_Luggage.cpp
  
  
  

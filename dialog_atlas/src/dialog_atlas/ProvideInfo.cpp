@@ -14,8 +14,6 @@
 
 
 
-
-
 #include "ros/ros.h"
 
 #include "behaviortree_cpp_v3/behavior_tree.h"
@@ -32,7 +30,9 @@ ProvideInfo::ProvideInfo(const std::string& name)
 : BT::ActionNodeBase(name, {}), nh_()
 {
     sub_name_ = nh_.subscribe("/get_name", 1, &ProvideInfo::nameCallback, this);
-    //sub_description = nh_.subscribe("/scan_filtered", 1, &BumpGo_Advanced_Laser::laserCallback, this);
+    //sub_description = nh_.subscribe("/scan_filtered", 1,&ProvideInfo::descriptionCallback, this); 
+    //sub_object_ = nh_.subscribe("/get_name", 1, &ProvideInfo::objectCallback, this);
+
 }
 
 
@@ -41,6 +41,20 @@ ProvideInfo::nameCallback(const dialog_atlas::get_name::ConstPtr& msg)
 {
     name_ = msg->name;
 }
+
+
+/*
+void
+ProvideInfo::descriptionCallback(const dialog_atlas::get_name::ConstPtr& msg)
+{
+    descrption_ = msg->name;
+}
+
+void
+ProvideInfo::objectCallback(const dialog_atlas::get_name::ConstPtr& msg)
+{
+    object_ = msg->name;
+}*/
 
 
 void

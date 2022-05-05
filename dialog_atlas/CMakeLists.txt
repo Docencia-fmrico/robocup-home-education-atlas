@@ -85,9 +85,9 @@ include_directories(
 
 add_library(${PROJECT_NAME}
   src/dialog_atlas/Get_Name.cpp
-  src/dialog_atlas/ProvideInfo.cpp
+  #src/dialog_atlas/ProvideInfo.cpp
   src/dialog_atlas/Activation.cpp
-  src/dialog_atlas/Name.cpp
+  #src/dialog_atlas/Name.cpp
 
  )
 
@@ -104,12 +104,17 @@ target_link_libraries(pub_name_node ${catkin_LIBRARIES} dialog_atlas)
 add_dependencies(pub_name_node dialog_atlas_generate_messages_cpp)
 
 
+add_executable(get_name_node src/get_name_node.cpp)
+target_link_libraries(get_name_node ${catkin_LIBRARIES} dialog_atlas)
+add_dependencies(get_name_node dialog_atlas_generate_messages_cpp)
+
+
 add_executable(pub_activate_node src/activate_topic.cpp)
 target_link_libraries(pub_activate_node ${catkin_LIBRARIES} dialog_atlas)
 add_dependencies(pub_activate_node dialog_atlas_generate_messages_cpp)
 
-add_executable(provide_info_node src/provide_info_node.cpp)
-target_link_libraries(provide_info_node ${catkin_LIBRARIES} dialog_atlas)
+#add_executable(provide_info_node src/provide_info_node.cpp)
+#target_link_libraries(provide_info_node ${catkin_LIBRARIES} dialog_atlas)
 
 
 
@@ -118,15 +123,15 @@ roslint_cpp(
  src/dialog_atlas/Get_Name.cpp
  
  src/get_name_node.cpp
- src/provide_info_node.cpp
- src/dialog_atlas/ProvideInfo.cpp
+ #src/provide_info_node.cpp
+ #src/dialog_atlas/ProvideInfo.cpp
  src/dialog_atlas/Activation.cpp
- src/dialog_atlas/Name.cpp
+ #src/dialog_atlas/Name.cpp
 
 
  include/dialog_atlas/Activation.h 
- include/dialog_atlas/ProvideInfo.h 
- include/dialog_atlas/Name.h 
+ #include/dialog_atlas/ProvideInfo.h 
+ #include/dialog_atlas/Name.h 
 
  
  
