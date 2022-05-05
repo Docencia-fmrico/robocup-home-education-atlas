@@ -21,6 +21,8 @@
 
 #include <move_base_msgs/MoveBaseAction.h>
 #include "behavior_trees/BTNavAction.h"
+#include <opencv2/opencv.hpp>
+#include <cv_bridge/cv_bridge.h>
 
 #include <string>
 
@@ -36,7 +38,6 @@ class Move : public BTNavAction
 
     void on_halt() override;
     BT::NodeStatus on_tick() override;;
-    void on_start() override;
     void on_feedback(const move_base_msgs::MoveBaseFeedbackConstPtr& feedback) override;
 
     static BT::PortsList providedPorts() {
@@ -45,6 +46,7 @@ class Move : public BTNavAction
 
   private:
     int counter_;
+    bool go_home;
 };
 
 }  // namespace fsm_robocup

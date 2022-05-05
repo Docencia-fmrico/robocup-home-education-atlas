@@ -28,7 +28,7 @@ Move::Move(
   const std::string& name,
   const std::string & action_name,
   const BT::NodeConfiguration & config)
-: BTNavAction(name, action_name, config), counter_(0)
+: BTNavAction(name, action_name, config), counter_(0), go_home(false)
 {
 }
 
@@ -38,40 +38,17 @@ Move::on_halt()
   ROS_INFO("Move halt");
 }
 
-void
-Move::on_start()
-{
-  move_base_msgs::MoveBaseGoal goal;
-
-  goal.target_pose.header.frame_id = "map";
-  goal.target_pose.header.stamp = ros::Time::now();
-  goal.target_pose.pose.position.x = 3.0;
-  goal.target_pose.pose.position.y = 0.0;
-  goal.target_pose.pose.position.z = 0.0;
-  goal.target_pose.pose.orientation.x = 0.0;
-  goal.target_pose.pose.orientation.y = 0.0;
-  goal.target_pose.pose.orientation.z = 0.0;
-  goal.target_pose.pose.orientation.w = 1.0;
-
-  set_goal(goal);
-
-  ROS_INFO("Move start");
-}
-
 BT::NodeStatus
 Move::on_tick()
 {
-  ROS_INFO("Move tick");
-  
-  if (counter_++ == 20)
-  {
-    std::cerr << "New Goal===========================" << std::endl;
+  if(counter_ == 0){
+    std::cout << "New Goal===========================" << std::endl;
     move_base_msgs::MoveBaseGoal goal;
 
     goal.target_pose.header.frame_id = "map";
     goal.target_pose.header.stamp = ros::Time::now();
-    goal.target_pose.pose.position.x = 3.0;
-    goal.target_pose.pose.position.y = 2.0;
+    goal.target_pose.pose.position.x = 0.0;
+    goal.target_pose.pose.position.y = 0.0;
     goal.target_pose.pose.position.z = 0.0;
     goal.target_pose.pose.orientation.x = 0.0;
     goal.target_pose.pose.orientation.y = 0.0;
@@ -79,8 +56,8 @@ Move::on_tick()
     goal.target_pose.pose.orientation.w = 1.0;
 
     set_goal(goal);
+    counter_++;
   }
-
   return BT::NodeStatus::RUNNING;
 }
 

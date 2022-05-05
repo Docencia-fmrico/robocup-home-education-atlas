@@ -25,6 +25,9 @@
 #include "geometry_msgs/Twist.h"
 #include "PIDController.hpp"
 #include "fsm_robocup/bbx_info.h"
+#include <opencv2/opencv.hpp>
+#include <cv_bridge/cv_bridge.h>
+
 
 namespace fsm_robocup
 {
@@ -34,7 +37,7 @@ class Follow_Person : public BT::ActionNodeBase
   public:
     ros::NodeHandle n_;
     double dist;
-    int px;
+    int px, xmax, xmin;
     explicit Follow_Person(const std::string& name);
     void messageCallback(const fsm_robocup::bbx_info::ConstPtr& msg);
     void halt();

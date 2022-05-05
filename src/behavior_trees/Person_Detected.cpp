@@ -15,6 +15,8 @@
 
 #include "behavior_trees/Person_Detected.h"
 #include "fsm_robocup/bbx_info.h"
+#include <opencv2/opencv.hpp>
+#include <cv_bridge/cv_bridge.h>
 
 namespace fsm_robocup
 {
@@ -22,12 +24,13 @@ namespace fsm_robocup
 Person_Detected::Person_Detected(const std::string& name)
 : BT::ConditionNode(name,{}), n_()
 {
-  sub_ = n_.subscribe("bbx_custom_topic", 1, &fsm_robocup::Person_Detected::messageCallback, this);
+  sub_ = n_.subscribe("bbx_person", 1, &fsm_robocup::Person_Detected::messageCallback, this);
 }
 void
 Person_Detected::messageCallback(const fsm_robocup::bbx_info::ConstPtr& msg){
   last_lecture = msg->header.stamp;
   dist = msg->dist;
+  ROS_INFO("xmax %d, xmin %d\n",msg->xmax, msg->xmin);
 }
 
 BT::NodeStatus
@@ -42,6 +45,7 @@ Person_Detected::tick()
   }
   else  
   {
+    ROS_INFO("persona detectada");
     return BT::NodeStatus::SUCCESS;
   }
 }

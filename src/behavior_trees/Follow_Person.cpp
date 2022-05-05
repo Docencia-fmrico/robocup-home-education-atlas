@@ -31,14 +31,14 @@ Follow_Person::Follow_Person(const std::string& name)
 : BT::ActionNodeBase(name, {}), velocity_pid(0.0, 5.0, 0.0, 0.2), turn_pid(0.0, 3.2, 0.0, 0.5)
 {
   pub_vel_ = n_.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity",1);
-  sub_ = n_.subscribe("bbx_custom_topic", 1, &fsm_robocup::Follow_Person::messageCallback, this);
+  sub_ = n_.subscribe("bbx_person", 1, &fsm_robocup::Follow_Person::messageCallback, this);
 }
 
 void
 Follow_Person::messageCallback(const fsm_robocup::bbx_info::ConstPtr& msg){
   dist = msg->dist;
   px = msg->px;
-  
+  ROS_INFO("distancia %f.",dist);
 }
 
 void
@@ -50,6 +50,7 @@ Follow_Person::halt()
 BT::NodeStatus
 Follow_Person::tick()
 {
+  ROS_INFO("siguiendo persona");
   geometry_msgs::Twist vel_msgs;
   double speed_clamped = std::clamp(dist -1, -5.0, 5.0);
   double angle_clamped = (px-320)/(-100);

@@ -20,12 +20,14 @@
 #include "behaviortree_cpp_v3/bt_factory.h"
 #include "behaviortree_cpp_v3/utils/shared_library.h"
 #include "behaviortree_cpp_v3/loggers/bt_zmq_publisher.h"
+#include <opencv2/opencv.hpp>
+#include <cv_bridge/cv_bridge.h>
 
 #include "ros/package.h"
 
 int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "fsm_visual_behavior");
+  ros::init(argc, argv, "fsm_robocup");
   ros::NodeHandle n;
 
   BT::BehaviorTreeFactory factory;//creo el arboll
@@ -34,20 +36,22 @@ int main(int argc, char **argv)
   //registro los nodos los cuales añado y compilo como librerias en el cmakelists. Ademas en la clase de cada nodo al final, pones el metodo para que se 
   //identifique el nombre del nodo a su clase
   
-  factory.registerFromPlugin(loader.getOSName("asr_ball_detected_node"));
-  factory.registerFromPlugin(loader.getOSName("asr_turn_node"));
-  factory.registerFromPlugin(loader.getOSName("asr_follow_ball_node"));
-  factory.registerFromPlugin(loader.getOSName("asr_person_detected_node"));
-  factory.registerFromPlugin(loader.getOSName("asr_follow_person_node"));
+  factory.registerFromPlugin(loader.getOSName("asr_move2_bt_node"));
+  factory.registerFromPlugin(loader.getOSName("asr_robocup_turn_node"));
+  factory.registerFromPlugin(loader.getOSName("asr_robocup_person_detected_node"));
+  factory.registerFromPlugin(loader.getOSName("asr_robocup_follow_person_node"));
+  factory.registerFromPlugin(loader.getOSName("asr_robocup_is_bumped_node"));
 
   auto blackboard = BT::Blackboard::create();//creo la blackboard
 
   blackboard->set("object", "cup");
-  std::string pkgpath = ros::package::getPath("fsm_visual_behavior");//buscas el behavior tree creado con xml
+  std::string pkgpath = ros::package::getPath("fsm_robocup");//buscas el behavior tree creado con xml
   std::string xml_path_pkg;
-  n.getParam("xml_path_pkg", xml_path_pkg);
+  //n.getParam("xml_path_pkg", xml_path_pkg);
+  xml_path_pkg = "/behavior_trees_xml/prueba.xml";
   std::string xml_path = pkgpath + xml_path_pkg;
 
+  std::cerr << xml_path << "hola";
   BT::Tree tree = factory.createTreeFromFile(xml_path, blackboard);//creas el arbol
   auto publisher_zmq = std::make_shared<BT::PublisherZMQ>(tree, 10, 1666, 1667);
 
@@ -62,5 +66,17 @@ int main(int argc, char **argv)
     loop_rate.sleep();
   }
 
+  blackboard->set("object", "cup");
+  pkgpath = ros::package::getPath("fsm_robocup");
+  xml_path_pkg = "/behavior_trees_xml/navigation.xml";
+  xml_path = pkgpath + xml_path_pkg;
+  tree = factory.createTreeFromFile(xml_path, blackboard);//creas el arbol
+
+  while (ros::ok())
+  {
+    tree.rootNode()->executeTick();
+    ros::spinOnce();
+    loop_rate.sleep();
+  }
   return 0;
 }

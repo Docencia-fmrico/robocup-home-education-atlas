@@ -22,6 +22,7 @@
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include "behaviortree_cpp_v3/bt_factory.h"
 #include "geometry_msgs/Twist.h"
+#include <opencv2/opencv.hpp>
 
 #include "fsm_robocup/bbx_info.h"
 

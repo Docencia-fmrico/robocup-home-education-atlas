@@ -1,3 +1,4 @@
+
 <?xml version="1.0"?>
 <root main_tree_to_execute="BehaviorTree">
     <BehaviorTree ID="BehaviorTree">
@@ -6,7 +7,7 @@
                 <Person_Detected name="person_detected"/>
                 <Turn name="turn"/>
             </ReactiveFallback>
-            <Follow_Person name="follow_person"/>
+                <Follow_Person name="follow_person"/>
         </ReactiveSequence>
     </BehaviorTree>
 </root>

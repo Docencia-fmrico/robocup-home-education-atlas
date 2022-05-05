@@ -72,15 +72,18 @@ add_library(behavior_trees
   /home/adrian/Escritorio/catking_ws/src/software_arq_robots_course/geometry_tf/src/geometry_tf/transforms.cpp
 )
 
+add_library(asr_robocup_is_bumped_node SHARED src/behavior_trees/Is_bumped.cpp)
 add_library(asr_robocup_turn_node SHARED src/behavior_trees/Turn.cpp)
 add_library(asr_robocup_person_detected_node SHARED src/behavior_trees/Person_Detected.cpp)
 add_library(asr_robocup_follow_person_node SHARED src/behavior_trees/Follow_Person.cpp)
 
 
 list(APPEND plugin_libs
+  asr_move2_bt_node
   asr_robocup_turn_node
   asr_robocup_person_detected_node
   asr_robocup_follow_person_node
+  asr_robocup_is_bumped_node
 )
 
 foreach(bt_plugin ${plugin_libs})
@@ -99,7 +102,7 @@ add_executable(nodo_prueba_1
   src/nodo_prueba_1.cpp
   src/behavior_trees/PIDController.cpp
 )
-target_link_libraries(nodo_prueba_1 ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
+target_link_libraries(nodo_prueba_1 ${catkin_LIBRARIES} ${ZMQ_LIBRARIES} ${OpenCV_LIBRARIES} )
 add_dependencies(nodo_prueba_1 fsm_visual_behavior_generate_messages_cpp)
 
 add_executable(nodo_behavior_trees_robocup 

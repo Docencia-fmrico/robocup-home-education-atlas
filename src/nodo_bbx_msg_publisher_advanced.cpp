@@ -30,7 +30,7 @@ public:
   std::string color_pantalon;
 
   std_msgs::Header header;
-  ros::Publisher pub = nh.advertise<fsm_robocup::bbx_info>("bbx_custom_topic",1);
+  ros::Publisher pub = nh.advertise<fsm_robocup::bbx_info>("bbx_person",1);
   ros::Publisher pub_ropa = nh.advertise<fsm_robocup::ropa_hsv>("bbx_ropa",1);
 
   void publicar()
@@ -41,6 +41,8 @@ public:
     bbx_info.dist = dist;
     bbx_info.px = px;
     bbx_info.py = py;
+    bbx_info.xmax = bbx_xmax;
+    bbx_info.xmin = bbx_xmin;
     pub.publish(bbx_info);
   }
 
@@ -71,7 +73,7 @@ void callback_bbx(const sensor_msgs::ImageConstPtr& image, const darknet_ros_msg
     return;
   }
   for (const auto & box : boxes->bounding_boxes) {
-    if(str_person.compare(box.Class) == 0 && box.probability > 0.6){
+    if(str_person.compare(box.Class) == 0 && box.probability > 0.7){
       mensajero->px = (box.xmax + box.xmin) / 2;
       mensajero->py = (box.ymax + box.ymin) / 2;
       mensajero->bbx_xmin = box.xmin;
@@ -79,7 +81,7 @@ void callback_bbx(const sensor_msgs::ImageConstPtr& image, const darknet_ros_msg
       mensajero->bbx_xmax = box.xmax;
       mensajero->bbx_ymax = box.ymax;
 
-      mensajero->dist = img_ptr_depth->image.at<float>(cv::Point(mensajero->px, mensajero->py))* 0.001f;//* 0.001f
+      mensajero->dist = img_ptr_depth->image.at<float>(cv::Point(mensajero->px, mensajero->py))* 1.0f;//* 0.001f
       std::cerr << box.Class << " at (" << mensajero->dist <<"px: "<< mensajero->px << "py: "<< mensajero->py << std::endl;
       mensajero->publicar();
     }
@@ -216,13 +218,12 @@ std::string nombrar_color(int color){
 
     std::cout << "camiseta " << mensajero->color_camiseta << " y pantalon " << mensajero->color_pantalon << std::endl;
 
+    /*
     cv::Mat result, result_drawing;
     cv::add(drawing_1, drawing_2, result_drawing);
 
     cv::bitwise_and(rgb,result_drawing,result);
     cv::imshow( "Contours", result );
-    
-    /*
     cv::namedWindow( "blanco", cv::WINDOW_AUTOSIZE );
     cv::imshow( "blanco", mask_blanco_vis);
     cv::namedWindow( "blanco", cv::WINDOW_AUTOSIZE );
