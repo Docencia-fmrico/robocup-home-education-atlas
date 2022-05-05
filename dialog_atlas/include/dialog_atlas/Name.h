@@ -45,8 +45,7 @@ class Name : public BT::ActionNodeBase
 
     ros::Subscriber sub_;
     ros::NodeHandle n_;
-
-    bool activate;
+    bool active_dialog_;
 
 };
 

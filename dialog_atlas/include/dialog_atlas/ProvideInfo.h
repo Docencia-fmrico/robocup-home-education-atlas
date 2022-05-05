@@ -1,12 +1,14 @@
 #ifndef PROVIDEINFO__H
 #define PROVIDEINFO__H
 
+
+#include <string>
 #include <ros/ros.h>
+
 #include "dialog_atlas/get_name.h"
 
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include "behaviortree_cpp_v3/bt_factory.h"
-
 
 
 namespace dialog_atlas

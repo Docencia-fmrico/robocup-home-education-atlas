@@ -15,6 +15,8 @@ public:
     Get_Luggage();
     void noIntentCB(dialogflow_ros_msgs::DialogflowResult result);
     void getLuggageIntentCB(dialogflow_ros_msgs::DialogflowResult result);
+    void stopIntentCB(dialogflow_ros_msgs::DialogflowResult result);
+
 
     bool choose_luggage();
     bool stop();

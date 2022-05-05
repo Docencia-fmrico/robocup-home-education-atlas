@@ -32,13 +32,17 @@ namespace carry_my_luggage_dialog
       this->registerCallback(
           std::bind(&Get_Luggage::getLuggageIntentCB, this, ph::_1),
           "Get Luggage Intent"); 
+
+      this->registerCallback(
+          std::bind(&Get_Luggage::stopIntentCB, this, ph::_1),
+          "Stop Intent"); 
   }
 
 
-  void Get_Luggage::noIntentCB(dialogflow_ros_msgs::DialogflowResult result)
-  {
-    ROS_INFO("[Get_Luggage] noIntentCB: intent [%s]", result.intent.c_str());
-  }
+void Get_Luggage::noIntentCB(dialogflow_ros_msgs::DialogflowResult result)
+{
+  ROS_INFO("[Get_Luggage] noIntentCB: intent [%s]", result.intent.c_str());
+}
 
 void Get_Luggage::getLuggageIntentCB(dialogflow_ros_msgs::DialogflowResult result)
   {
@@ -55,37 +59,45 @@ void Get_Luggage::getLuggageIntentCB(dialogflow_ros_msgs::DialogflowResult resul
   
   }
 
+void Get_Luggage::stopIntentCB(dialogflow_ros_msgs::DialogflowResult result)
+{
+  ROS_INFO("[Get_Luggage] stopIntentCB: intent [%s]", result.intent.c_str());
+}
 
-  bool Get_Luggage::choose_luggage()
-  {
+
+
+
+bool Get_Luggage::choose_luggage()
+{
+  
+    ros::Duration(0.2).sleep();
+    speak("What luggage should I get");
+
+    start_ts_ = ros::Time::now();
     
-      ros::Duration(0.2).sleep();
-      speak("What luggage should I get");
+    if((ros::Time::now() - start_ts_).toSec() < WAITING_TIME) 
+    {
+      listen();
 
-      start_ts_ = ros::Time::now();
-      
-      if((ros::Time::now() - start_ts_).toSec() < WAITING_TIME) 
-      {
-        listen();
+      //if ( keep_listening_ == false)
+      //{
+        //stop_ = true;
+      //}
+    
+    }
 
-        if ( keep_listening_ == false)
-        {
-          stop_ = true;
-        }
-      
-      }
+    std::cout << stop_ << "\n";
+    return stop_;
 
-      std::cout << stop_ << "\n";
-      return stop_;
+}
+
+
+  bool Get_Luggage::stop()
+  {
+   
+    
 
   }
-
-
-  //bool Get_Luggage::stop()
-  //{
-    //if stop_= 
-
-  //}
 
 }
 

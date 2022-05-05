@@ -29,10 +29,10 @@
 namespace carry_my_luggage_dialog
 {
 
-class Name : public BT::ActionNodeBase
+class Luggage : public BT::ActionNodeBase
 {
   public:
-    explicit Name(const std::string& name);
+    explicit Luggage(const std::string& Luggage);
 
     void messageCallback(const dialog_atlas::activate_msg::ConstPtr& msg);
     void halt();
@@ -50,7 +50,6 @@ class Name : public BT::ActionNodeBase
 
 };
 
-}  // namespace movement
+}  // Luggagespace movement
 
-#endif  // Name_H
-*/
+#endif  // Luggage_H

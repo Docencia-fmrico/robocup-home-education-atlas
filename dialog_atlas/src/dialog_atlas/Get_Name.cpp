@@ -151,36 +151,30 @@ namespace dialog_atlas
     return stop_;
   }
 
+  bool Get_Name::obtain_name()
+  {
+
+    bool state = false;
+    dialog_atlas::Get_Name forwarder;
+    ros::Rate loop_rate(20);
+    
+    while(ros::ok())
+    {
+      forwarder.dialog();
+      ros::spinOnce();
+      loop_rate.sleep();
+    
+      if (forwarder.stop_node() == true)
+      { 
+        state = true; 
+        break;
+      }
+    
+    }
+
+    return state;
+
+  }
+
     
 }
-
-
-/*int main(int argc, char** argv)
-{
-  ros::init(argc, argv, "get_name_node");
-
-  dialog_atlas::Get_Name forwarder;
-  
-
-  ros::Rate loop_rate(20);
-    
-  while(ros::ok())
-  {
-    forwarder.dialog();
-    ros::spinOnce();
-    loop_rate.sleep();
-  
-    if (forwarder.stop_node() == true)
-    { 
-      ros::shutdown(); 
-    }
-  
-  }
-    
-  return 0;
-}*/
-
-
-
-
-

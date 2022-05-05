@@ -29,7 +29,7 @@ namespace dialog_atlas
 {
 
 Name::Name(const std::string& name)
-: BT::ActionNodeBase(name, {}), status_(BT::NodeStatus::FAILURE)
+: BT::ActionNodeBase(name, {}), active_dialog_(true)
 {
   sub_ = n_.subscribe("activate_topic", 1, &dialog_atlas::Name::messageCallback, this);
 }
@@ -37,7 +37,7 @@ Name::Name(const std::string& name)
 
 void Name::messageCallback(const dialog_atlas::activate_msg::ConstPtr& msg)
 {
-  activate = msg->activate;
+  //activate = msg->activate;
 }
 
 
@@ -54,19 +54,21 @@ Name::tick()
   ROS_INFO("Dialog tick");
 
   dialog_atlas::Get_Name forwarder;
-  
-  if (activate == true)
-  {
-    
-    forwarder.dialog();
-    if (forwarder.stop_node() == true)
-    { 
-      status_ = BT::NodeStatus::SUCCESS;
-    }
-  
-  }
 
-  return status_;
+
+  if (forwarder.obtain_name())
+  {
+    return BT::NodeStatus::SUCCESS;
+  }
+ 
+  else
+  {
+    return BT::NodeStatus::RUNNING;
+
+  }
+  
+  
+
 }
 
 }  // namespace dialog_atlas

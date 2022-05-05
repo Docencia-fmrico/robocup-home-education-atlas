@@ -2,25 +2,7 @@ cmake_minimum_required(VERSION 3.0.2)
 project(carry_my_luggage_dialog)
 
 
-# Copyright 2022 Team Atlas
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http:#www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-
-
-cmake_minimum_required(VERSION 3.0.2)
-project(carry_my_luggage_dialog)
-
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_BUILD_TYPE Debug)
 
 set(CMAKE_CONFIG_PATH ${CMAKE_MODULE_PATH}  "${CMAKE_CURRENT_LIST_DIR}/cmake")
@@ -36,7 +18,6 @@ endif()
 
 
 
-
 find_package(catkin REQUIRED COMPONENTS
     roscpp
     roslint
@@ -45,19 +26,11 @@ find_package(catkin REQUIRED COMPONENTS
     std_srvs
     std_msgs
     sound_play
-    actionlib
-    actionlib_msgs
     behaviortree_cpp_v3
     message_generation
     gb_dialog
     dialog_atlas
 )
-
-
-#add_message_files(
-#  FILES 
- 
-#)
 
 
 generate_messages(
@@ -71,7 +44,6 @@ catkin_package(
 	CATKIN_DEPENDS 
   roscpp 
   dialogflow_ros_msgs 
-  actionlib_msgs 
   message_runtime 
   behaviortree_cpp_v3
   gb_dialog
@@ -82,22 +54,34 @@ catkin_package(
 
 include_directories(
  
+ include
  ${catkin_INCLUDE_DIRS}
  ${ZMQ_INCLUDE_DIRS}
- include
+ 
+)
+
+add_library(${PROJECT_NAME}
+src/carry_my_luggage_dialog/Get_Luggage.cpp
 )
 
 
-add_library(${PROJECT_NAME}
-  src/carry_my_luggage_dialog/Get_Luggage.cpp
 
- )
+add_library(luggage_bt_node SHARED src/carry_my_luggage_dialog/Luggage.cpp)
+list(APPEND plugin_libs
+  luggage_bt_node)
+
+target_link_libraries(luggage_bt_node ${PROJECT_NAME} )
 
 
+foreach(bt_plugin ${plugin_libs})
+  target_link_libraries(${bt_plugin} ${catkin_LIBRARIES})
+  target_compile_definitions(${bt_plugin} PRIVATE BT_PLUGIN_EXPORT)
+endforeach()
 
-add_executable(get_luggage_node src/get_luggage_node.cpp)
-add_dependencies(get_luggage_node ${catkin_EXPORTED_TARGETS})
-target_link_libraries(get_luggage_node ${catkin_LIBRARIES} carry_my_luggage_dialog)
+
+#add_executable(get_luggage_node src/get_luggage_node.cpp)
+#target_link_libraries(get_luggage_node ${catkin_LIBRARIES} ${ZMQ_LIBRARIES}  )
+
 
 
 
@@ -105,7 +89,11 @@ target_link_libraries(get_luggage_node ${catkin_LIBRARIES} carry_my_luggage_dial
 
 roslint_cpp(
  src/carry_my_luggage_dialog/Get_Luggage.cpp
+ src/carry_my_luggage_dialog/Luggage.cpp
+ src/get_luggage_node
  
+ include/carry_my_luggage_dialog/Get_Luggage.h
+ include/carry_my_luggage_dialog/Luggage.h
  
  
 )

@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
-
-#include "ros/ros.h"
+#include <string>
 
 #include "behaviortree_cpp_v3/behavior_tree.h"
 
 #include "dialog_atlas/Get_Name.h"
 #include "dialog_atlas/ProvideInfo.h"
 #include "dialog_atlas/get_name.h"
+
+#include "ros/ros.h"
 
 namespace dialog_atlas
 {
@@ -68,13 +68,16 @@ ProvideInfo::halt()
 BT::NodeStatus
 ProvideInfo::tick()
 {
+
+  ROS_INFO("Dialog tick");
+
   Get_Name name_obtained;
   name_obtained.speak(name_);
-  return BT::NodeStatus::RUNNING;
+  return BT::NodeStatus::SUCCESS;
 }
 
    
-}
+}  // namespace dialog_atlas
 
 
 #include "behaviortree_cpp_v3/bt_factory.h"
