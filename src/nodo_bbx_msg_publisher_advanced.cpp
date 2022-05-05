@@ -81,7 +81,7 @@ void callback_bbx(const sensor_msgs::ImageConstPtr& image, const darknet_ros_msg
       mensajero->bbx_xmax = box.xmax;
       mensajero->bbx_ymax = box.ymax;
 
-      mensajero->dist = img_ptr_depth->image.at<float>(cv::Point(mensajero->px, mensajero->py))* 1.0f;//* 0.001f
+      mensajero->dist = img_ptr_depth->image.at<float>(cv::Point(mensajero->px, mensajero->py))* 0.001f;//* 0.001f
       std::cerr << box.Class << " at (" << mensajero->dist <<"px: "<< mensajero->px << "py: "<< mensajero->py << std::endl;
       mensajero->publicar();
     }
@@ -93,77 +93,43 @@ std::string nombrar_color(int color){
   std::string color_name;
   switch (color){
     case 0:
-      color_name = "blanco";
-      break;
-    case 1:
-      color_name = "negro";
-      break;
-    case 2:
       color_name = "rojo";
       break;
-    case 3:
+    case 1:
       color_name = "naranja";
       break;
-    case 4:
-      color_name = "amarillo";
-      break;
-    case 5:
-      color_name = "verde";
-      break;
-    case 6:
+    case 2:
       color_name = "azul";
-      break;
-    case 7:
-      color_name = "morado";
-      break;
-    case 8:
-      color_name = "rosa";
       break;
   }
   return color_name;
 }
 
   void detectar_color(cv::Mat img_ptr_rgb, bbx_info *mensajero){
-    cv::Mat rgb, hsv, mask_blanco_vis, mask_blanco, mask_rojo1, mask_rojo2, mask_rojo, mask_rojo_vis;
-    cv::Mat mask_naranja, mask_naranja_vis, mask_amarilla, mask_amarilla_vis, mask_verde, mask_verde_vis;
-    cv::Mat mask_azul, mask_azul_vis, mask_morado, mask_morado_vis, mask_rosa, mask_rosa_vis;
-    cv::Mat mask_negro, mask_negro_vis;
+    cv::Mat rgb, hsv, mask_rojo, mask_rojo_vis;
+    cv::Mat mask_naranja, mask_naranja_vis;
+    cv::Mat mask_azul, mask_azul_vis;
 
     rgb = cv::Mat(img_ptr_rgb);
     cv::cvtColor(rgb, hsv, cv::COLOR_BGR2HSV);
 
-    cv::inRange(hsv, cv::Scalar(0, 0, 200, 0), cv::Scalar(180, 255, 255, 0), mask_blanco);
-    cv::bitwise_and(rgb, rgb, mask_blanco_vis, mask_blanco);
+    mask_rojo_vis = cv::Mat::zeros( rgb.size(), CV_8UC3 );
+    mask_naranja_vis = cv::Mat::zeros( rgb.size(), CV_8UC3 );
+    mask_azul_vis = cv::Mat::zeros( rgb.size(), CV_8UC3 );
 
-    cv::inRange(hsv, cv::Scalar(0, 0, 0, 0), cv::Scalar(0, 0, 40, 0), mask_negro);
-    cv::bitwise_and(rgb, rgb, mask_negro_vis, mask_negro);
-
-    cv::inRange(hsv, cv::Scalar(0, 100, 20, 0), cv::Scalar(8, 255, 255, 0), mask_rojo1);
-    cv::inRange(hsv, cv::Scalar(175, 100, 20, 0), cv::Scalar(179, 255, 255, 0), mask_rojo2);
-    cv::add(mask_rojo1, mask_rojo2, mask_rojo);
+    cv::inRange(hsv, cv::Scalar(170, 100, 20, 0), cv::Scalar(179, 255, 255, 0), mask_rojo);
     cv::bitwise_and(rgb, rgb, mask_rojo_vis, mask_rojo);
 
-    cv::inRange(hsv, cv::Scalar(9, 100, 20, 0), cv::Scalar(22, 255, 255, 0), mask_naranja);
+    cv::inRange(hsv, cv::Scalar(0, 100, 20, 0), cv::Scalar(15, 255, 255, 0), mask_naranja);
     cv::bitwise_and(rgb, rgb, mask_naranja_vis, mask_naranja);
 
-    cv::inRange(hsv, cv::Scalar(23, 100, 20, 0), cv::Scalar(35, 255, 255, 0), mask_amarilla);
-    cv::bitwise_and(rgb, rgb, mask_amarilla_vis, mask_amarilla);
-
-    cv::inRange(hsv, cv::Scalar(36, 100, 20, 0), cv::Scalar(74, 255, 255, 0), mask_verde);
-    cv::bitwise_and(rgb, rgb, mask_verde_vis, mask_verde);
-
-    cv::inRange(hsv, cv::Scalar(75, 100, 20, 0), cv::Scalar(128, 255, 255, 0), mask_azul);
+    cv::inRange(hsv, cv::Scalar(75, 100, 20, 0), cv::Scalar(140, 255, 255, 0), mask_azul);
     cv::bitwise_and(rgb, rgb, mask_azul_vis, mask_azul);
 
-    cv::inRange(hsv, cv::Scalar(129, 100, 20, 0), cv::Scalar(140, 255, 255, 0), mask_morado);
-    cv::bitwise_and(rgb, rgb, mask_morado_vis, mask_morado);
-
-    cv::inRange(hsv, cv::Scalar(141, 100, 20, 0), cv::Scalar(174, 255, 255, 0), mask_rosa);
-    cv::bitwise_and(rgb, rgb, mask_rosa_vis, mask_rosa);
 
     std::vector<std::vector<cv::Point> > contours;
     std::vector<cv::Vec4i> jerarquia;
-    std::vector<cv::Mat> all_masks = {mask_blanco,mask_negro,mask_rojo,mask_naranja,mask_amarilla,mask_verde,mask_azul, mask_morado, mask_rosa};
+    std::vector<cv::Mat> all_masks = {mask_rojo,mask_naranja,mask_azul};
     int max_area_mask, second_max_area_mask, contour_max_index, second_contour_max_index;
     max_area_mask = 0;
     second_max_area_mask = 0;
@@ -176,7 +142,7 @@ std::string nombrar_color(int color){
 
     cv::Mat drawing_1, drawing_2;
 
-    for(int i = 0; i < 9; i++){
+    for(int i = 0; i < 3; i++){
 
       findContours( all_masks[i], contours, jerarquia, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE, cv::Point(0,0));
       std::vector<cv::Moments> mu(contours.size() );
@@ -208,30 +174,32 @@ std::string nombrar_color(int color){
     std::string color_name_2big = nombrar_color(second_max_area_mask);
 
 
-    mensajero->color_camiseta = color_name_2big;
-    mensajero->color_pantalon = color_name_big;
+    mensajero->color_camiseta = color_name_big;
+    mensajero->color_pantalon = color_name_2big;
 
     if( y_big > y_2big){
-      mensajero->color_camiseta = color_name_big;
-      mensajero->color_pantalon = color_name_2big;
+      mensajero->color_camiseta = color_name_2big;
+      mensajero->color_pantalon = color_name_big;
     }
 
-    std::cout << "camiseta " << mensajero->color_camiseta << " y pantalon " << mensajero->color_pantalon << std::endl;
-
-    /*
     cv::Mat result, result_drawing;
     cv::add(drawing_1, drawing_2, result_drawing);
-
     cv::bitwise_and(rgb,result_drawing,result);
     cv::imshow( "Contours", result );
+    cv::namedWindow( "rojo", cv::WINDOW_AUTOSIZE );
+    cv::imshow( "rojo", mask_rojo_vis);
+    cv::namedWindow( "naranja", cv::WINDOW_AUTOSIZE );
+    cv::imshow( "naranja", mask_naranja_vis);
+    cv::namedWindow( "azul", cv::WINDOW_AUTOSIZE );
+    cv::imshow( "azul", mask_azul_vis);
+
+    /*
     cv::namedWindow( "blanco", cv::WINDOW_AUTOSIZE );
     cv::imshow( "blanco", mask_blanco_vis);
     cv::namedWindow( "blanco", cv::WINDOW_AUTOSIZE );
     cv::imshow( "blanco", mask_blanco_vis);
     cv::namedWindow( "negro", cv::WINDOW_AUTOSIZE );
     cv::imshow( "negro", mask_negro_vis);
-    cv::namedWindow( "rojo", cv::WINDOW_AUTOSIZE );
-    cv::imshow( "rojo", mask_rojo_vis);
     cv::namedWindow( "naranja", cv::WINDOW_AUTOSIZE );
     cv::imshow( "naranja", mask_naranja_vis);
     cv::namedWindow( "amarillo", cv::WINDOW_AUTOSIZE );
@@ -245,6 +213,8 @@ std::string nombrar_color(int color){
     cv::namedWindow( "amarillo", cv::WINDOW_AUTOSIZE );
     cv::imshow( "amarillo", mask_amarilla_vis);
     */
+
+    std::cout << "camiseta " << mensajero->color_camiseta << " y pantalon " << mensajero->color_pantalon << std::endl;
     mensajero->publicar_ropa();
     cv::waitKey( 30 );
   }
