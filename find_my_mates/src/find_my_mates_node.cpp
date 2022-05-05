@@ -32,11 +32,15 @@ int main(int argc, char **argv)
   BT::BehaviorTreeFactory factory;
   BT::SharedLibrary loader;
 
+  factory.registerFromPlugin(loader.getOSName("current_position_bt_node"));
+  factory.registerFromPlugin(loader.getOSName("detect_operator_bt_node"));
+  /*
   factory.registerFromPlugin(loader.getOSName("detect_person_bt_node"));
   factory.registerFromPlugin(loader.getOSName("turn_bt_node"));
   factory.registerFromPlugin(loader.getOSName("approach_person_bt_node"));
   factory.registerFromPlugin(loader.getOSName("get_position_bt_node"));
   factory.registerFromPlugin(loader.getOSName("go_to_position_bt_node"));
+  */
 
   auto blackboard = BT::Blackboard::create();
 

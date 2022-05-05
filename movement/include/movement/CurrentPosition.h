@@ -12,51 +12,43 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef MOVEMENT_GOTOPOSITION_H
-#define MOVEMENT_GOTOPOSITION_H
+#ifndef MOVEMENT_CURRENTPOSITION_H
+#define MOVEMENT_CURRENTPOSITION_H
 
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include "behaviortree_cpp_v3/bt_factory.h"
 
-#include <move_base_msgs/MoveBaseAction.h>
-#include <geometry_msgs/Pose.h>
-
-#include "movement/BTNavAction.h"
-
+#include <tf/transform_listener.h>
+#include <geometry_msgs/PoseStamped.h>
 #include <string>
+
 #include "ros/ros.h"
 
 namespace movement
 {
 
-class GoToPosition : public BTNavAction
+class CurrentPosition : public BT::ActionNodeBase
 {
   public:
-    explicit GoToPosition(const std::string& name,
-    const std::string& action_name,
-    const BT::NodeConfiguration& config);
+    explicit CurrentPosition(const std::string& name, const BT::NodeConfiguration& config);
+    
+    void halt();
 
-    void on_halt() override;
-    BT::NodeStatus on_tick() override;
-    void on_start() override;
-    void on_feedback(const move_base_msgs::MoveBaseFeedbackConstPtr& feedback) override;
+    BT::NodeStatus tick();
 
     static BT::PortsList providedPorts()
     {
         return 
-        {
-          BT::InputPort<bool>("new_goal"),
-          BT::InputPort<geometry_msgs::Pose>("position") 
+        { 
+          BT::OutputPort<geometry_msgs::PoseStamped>("current_pos") 
         };
     }
-    
+
   private:
-    geometry_msgs::Pose pos_;
-    move_base_msgs::MoveBaseGoal goal_;
-    bool new_goal_;
-    int counter_;
+    tf::TransformListener listener_;
+    geometry_msgs::PoseStamped pos_;
 };
 
 }  // namespace movement
 
-#endif  // MOVEMENT_GOTOPOSITION_H
+#endif  // MOVEMENT_GETPOSITION_H

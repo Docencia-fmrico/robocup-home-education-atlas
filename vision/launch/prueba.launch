@@ -1,0 +1,6 @@
+<launch>
+    <!--include file="$(find navigation)/launch/navigation.launch"-->
+    <node pkg="fsm_visual_behavior" type="nodo_camera_filtered" name="filter_camera" output="screen"></node>
+	<node pkg="cameras_cpp" type="nodo_rgbd_filter" name="publish_filter" output="screen"></node>
+	<node pkg="vision" type="operator_tf_node" name="public_tf" output="screen"></node>
+</launch>

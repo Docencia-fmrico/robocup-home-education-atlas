@@ -27,10 +27,14 @@ find_package(catkin REQUIRED COMPONENTS
   OpenCV
   cv_bridge
   image_transport
-  tf
   pcl_conversions
   pcl_ros
+  tf
+  tf2
+  tf2_ros
+  tf2_geometry_msgs
   message_generation
+  fsm_visual_behavior
 )
 
 add_message_files(
@@ -56,10 +60,14 @@ CATKIN_DEPENDS
   move_base_msgs 
   cv_bridge
   image_transport
-  tf
   pcl_conversions
   pcl_ros
+  tf
+  tf2
+  tf2_ros
+  tf2_geometry_msgs
   message_runtime
+  fsm_visual_behavior
 )
 
 include_directories(
@@ -71,8 +79,10 @@ include_directories(
 
 add_definitions(${PCL_DEFINITIONS})
 
+add_library(detect_operator_bt_node SHARED src/vision/DetectOperator.cpp)
 add_library(detect_person_bt_node SHARED src/vision/DetectPerson.cpp)
 list(APPEND plugin_libs
+  detect_operator_bt_node
   detect_person_bt_node
 )
 
@@ -93,11 +103,12 @@ add_executable(nodo_bbx_msg_publisher_advanced src/nodo_bbx_msg_publisher_advanc
 target_link_libraries(nodo_bbx_msg_publisher_advanced ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 add_dependencies(nodo_bbx_msg_publisher_advanced vision_generate_messages_cpp)
 
-add_executable(person_tf_node src/person_tf_node.cpp)
-target_link_libraries(person_tf_node ${catkin_LIBRARIES})
+add_executable(operator_tf_node src/operator_tf_node.cpp)
+target_link_libraries(operator_tf_node ${catkin_LIBRARIES})
 
 roslint_cpp(
   src/nodo_bbx_msg_publisher_advanced.cpp
-  src/person_tf_node.cpp
+  src/operator_tf_node.cpp
   include/vision/DetectPerson.h src/vision/DetectPerson.cpp
+  include/vision/DetectOperator.h src/vision/DetectOperator.cpp
 )

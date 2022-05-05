@@ -38,13 +38,12 @@
 
 #include <boost/algorithm/string.hpp>
 
-#include "vision/bbx_info.h"
 
 
 class RGBDtf
 {
 public:
-  RGBDtf(): objectFrameId_("/person/0")
+  RGBDtf(): objectFrameId_("/operator/0")
   , workingFrameId_("/map")
   , cameraTopicId_("/cloud_filtered/0")
   {
@@ -60,17 +59,6 @@ public:
     tfPointCloudSub_ =
       new tf::MessageFilter<sensor_msgs::PointCloud2> (*pointCloudSub_, tfListener_, workingFrameId_, 5);
     tfPointCloudSub_->registerCallback(boost::bind(&RGBDtf::cloudCB, this, _1));
-
-
-    sub_ = nh_.subscribe("bbx_custom_topic", 1, &RGBDtf::bbxPersonCB, this);
-  }
-
-  void bbxPersonCB(const vision::bbx_info::ConstPtr& msg)
-  {
-    ROS_INFO("Message: [%i,%i]", msg->px, msg->px);
-    person_px_ = msg->px;
-    person_py_ = msg->py;
-    person_pz_ = 0;
   }
 
   void cloudCB(const sensor_msgs::PointCloud2::ConstPtr& cloud_in)
@@ -90,10 +78,31 @@ public:
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr pcrgb(new pcl::PointCloud<pcl::PointXYZRGB>);
     pcl::fromROSMsg(cloud, *pcrgb);
 
-    if (!std::isnan(person_px_) && !std::isnan(person_py_) && !std::isnan(person_pz_))
+    float x, y, z;
+    int c = 0;
+    x = x = z = 0.0;
+
+    pcl::PointCloud<pcl::PointXYZRGB>::iterator it;
+    for (it=pcrgb->begin(); it != pcrgb->end(); ++it)
     {
+      if (!std::isnan(it->x) && !std::isnan(it->y) && !std::isnan(it->z))
+      {
+        x += it->x;
+        y += it->y;
+        z += it->z;
+        c++;
+      }
+    }
+
+    if (c != 0)
+    {
+      x = x/c;
+      y = y/c;
+      z = z/c;
+
+
       tf::StampedTransform transform;
-      transform.setOrigin(tf::Vector3(person_px_, person_py_, person_pz_));
+      transform.setOrigin(tf::Vector3(x, y, z));
       transform.setRotation(tf::Quaternion(0.0, 0.0, 0.0, 1.0));
 
       transform.stamp_ = ros::Time::now();
@@ -125,15 +134,11 @@ private:
   std::string objectFrameId_;
   std::string workingFrameId_;
   std::string cameraTopicId_;
-
-  ros::Subscriber sub_;
-
-  int person_px_, person_py_, person_pz_;
 };
 
 int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "rgbd_tf");
+  ros::init(argc, argv, "operator_tf");
   RGBDtf rgbdrf;
   ros::spin();
   return 0;

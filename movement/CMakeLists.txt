@@ -64,11 +64,13 @@ include_directories(
 add_library(${PROJECT_NAME} src/PIDController.cpp)
 
 add_library(approach_person_bt_node SHARED src/movement/ApproachPerson.cpp)
+add_library(current_position_bt_node SHARED src/movement/CurrentPosition.cpp)
 add_library(get_position_bt_node SHARED src/movement/GetPosition.cpp)
 add_library(go_to_position_bt_node SHARED src/movement/GoToPosition.cpp)
 add_library(turn_bt_node SHARED src/movement/Turn.cpp)
 list(APPEND plugin_libs
   approach_person_bt_node
+  current_position_bt_node
   get_position_bt_node
   go_to_position_bt_node
   turn_bt_node
@@ -93,6 +95,7 @@ roslint_cpp(
   src/move_node.cpp
   src/position_server_node.cpp
   include/movement/ApproachPerson.h src/movement/ApproachPerson.cpp
+  include/movement/CurrentPosition.h src/movement/CurrentPosition.cpp
   include/movement/GetPosition.h src/movement/GetPosition.cpp
   include/movement/GoToPosition.h src/movement/GoToPosition.cpp
   include/movement/Turn.h src/movement/Turn.cpp
