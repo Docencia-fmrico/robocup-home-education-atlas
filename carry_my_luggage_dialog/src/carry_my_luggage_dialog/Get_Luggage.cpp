@@ -66,8 +66,7 @@ void Get_Luggage::stopIntentCB(dialogflow_ros_msgs::DialogflowResult result)
 
 
 
-
-bool Get_Luggage::choose_luggage()
+void Get_Luggage::choose_luggage()
 {
   
     ros::Duration(0.2).sleep();
@@ -79,22 +78,40 @@ bool Get_Luggage::choose_luggage()
     {
       listen();
 
-      //if ( keep_listening_ == false)
-      //{
-        //stop_ = true;
-      //}
-    
+      if ( keep_listening_ == false)
+      {
+        stop_ = true;
+      }
     }
 
-    std::cout << stop_ << "\n";
-    return stop_;
-
+   
 }
 
 
   bool Get_Luggage::stop()
   {
    
+    bool state = false;
+    carry_my_luggage_dialog::Get_Luggage forwarder;
+    
+    ros::Rate loop_rate(20);
+    
+    while(ros::ok())
+    {
+      forwarder.choose_luggage();
+      ros::spinOnce();
+      loop_rate.sleep();
+    
+      if (stop_ == true)
+      { 
+        state = true; 
+        break;
+      }
+    
+    }
+
+    return state;
+
     
 
   }

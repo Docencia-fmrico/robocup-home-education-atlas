@@ -54,11 +54,17 @@ Luggage::tick()
   ROS_INFO("Dialog tick");
 
   carry_my_luggage_dialog::Get_Luggage forwarder;
-  
-  //if (activate == true)
-  //{
+  forwarder.choose_luggage();
+  ros::Time start_ts_ = ros::Time::now();
+
+  if((ros::Time::now() - start_ts_).toSec() < 15) 
+  {
+    forwarder.listen();
+
+  }
+
     
-  if (forwarder.choose_luggage() == false)
+  if (forwarder.stop() == false)
   {
       status_ = BT::NodeStatus::RUNNING;
   }
@@ -69,7 +75,7 @@ Luggage::tick()
   }
    
   
-  //}
+  
 
   return status_;
 }

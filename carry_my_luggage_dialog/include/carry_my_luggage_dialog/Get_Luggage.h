@@ -18,7 +18,7 @@ public:
     void stopIntentCB(dialogflow_ros_msgs::DialogflowResult result);
 
 
-    bool choose_luggage();
+    void choose_luggage();
     bool stop();
     
 
