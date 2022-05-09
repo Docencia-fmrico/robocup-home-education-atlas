@@ -193,27 +193,6 @@ std::string nombrar_color(int color){
     cv::namedWindow( "azul", cv::WINDOW_AUTOSIZE );
     cv::imshow( "azul", mask_azul_vis);
 
-    /*
-    cv::namedWindow( "blanco", cv::WINDOW_AUTOSIZE );
-    cv::imshow( "blanco", mask_blanco_vis);
-    cv::namedWindow( "blanco", cv::WINDOW_AUTOSIZE );
-    cv::imshow( "blanco", mask_blanco_vis);
-    cv::namedWindow( "negro", cv::WINDOW_AUTOSIZE );
-    cv::imshow( "negro", mask_negro_vis);
-    cv::namedWindow( "naranja", cv::WINDOW_AUTOSIZE );
-    cv::imshow( "naranja", mask_naranja_vis);
-    cv::namedWindow( "amarillo", cv::WINDOW_AUTOSIZE );
-    cv::imshow( "amarillo", mask_amarilla_vis);
-    cv::namedWindow( "verde", cv::WINDOW_AUTOSIZE );
-    cv::imshow( "verde", mask_verde_vis);
-    cv::imshow( "morado", mask_morado_vis);
-    cv::namedWindow( "rosa", cv::WINDOW_AUTOSIZE );
-    cv::imshow( "rosa", mask_rosa_vis);
-    cv::imshow( "Example 2-10", rgb );
-    cv::namedWindow( "amarillo", cv::WINDOW_AUTOSIZE );
-    cv::imshow( "amarillo", mask_amarilla_vis);
-    */
-
     std::cout << "camiseta " << mensajero->color_camiseta << " y pantalon " << mensajero->color_pantalon << std::endl;
     mensajero->publicar_ropa();
     cv::waitKey( 30 );
