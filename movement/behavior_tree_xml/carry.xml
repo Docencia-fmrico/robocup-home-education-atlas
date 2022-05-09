@@ -1,0 +1,22 @@
+<root main_tree_to_execute = "MainTree">
+     <BehaviorTree ID="MainTree">
+        <SequenceStar name="root_sequence">
+            <Sequence name="root_sequence">
+                <GetPosition name="get_position" goal="8" new_goal="{new_goal}" position="{position}"/>
+                <GoToPosition  name="move" new_goal="{new_goal}" position="{position}"/>
+            </Sequence>
+            <ReactiveFallback>
+                <ReactiveSequence>
+                    <Is_bumped name="is_bumped"/>
+                </ReactiveSequence>
+                <ReactiveSequence>
+                    <ReactiveFallback>
+                        <Person_Detected name="person_detected"/>
+                        <Turn name="turn"/>
+                    </ReactiveFallback>
+                    <Follow_Person name="follow_person"/>
+                </ReactiveSequence>
+            </ReactiveFallback>
+        </SequenceStar>
+    </BehaviorTree>
+ </root>

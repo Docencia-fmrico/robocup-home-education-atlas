@@ -80,8 +80,8 @@ public:
 
         break;
       case GUEST7:
-        res.pos.position.x = 4.2;
-        res.pos.position.y = 6.6;
+        res.pos.position.x = 3.3;
+        res.pos.position.y = 3.6;
         res.pos.position.z = 0.0;
         res.pos.orientation = tf::createQuaternionMsgFromYaw(M_PI);
 

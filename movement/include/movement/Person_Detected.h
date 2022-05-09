@@ -1,4 +1,5 @@
-// Copyright 2022 Team Atlas
+
+// Copyright 2019 Intelligent Robotics Lab
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,47 +13,37 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef MOVEMENT_FOLLOWPERSON_H
-#define MOVEMENT_FOLLOWPERSON_H
 
-#include <algorithm>
+#ifndef FSM_ROBOCUP_PERSON_DETECTED_H
+#define FSM_ROBOCUP_PERSON_DETECTED_H
+
 #include <string>
 
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include "behaviortree_cpp_v3/bt_factory.h"
+#include "geometry_msgs/Twist.h"
+#include <opencv2/opencv.hpp>
 
-#include <tf/transform_listener.h>
-#include <geometry_msgs/Pose.h>
-
-#include "vision/bbx_info.h"
+#include "movement/bbx_info.h"
 
 #include "ros/ros.h"
 
 namespace movement
 {
 
-class FollowPerson : public BT::ActionNodeBase
+class Person_Detected : public BT::ConditionNode
 {
   public:
-    explicit FollowPerson(const std::string& name, const BT::NodeConfiguration& config);
-
-    void halt();
-
+    ros::NodeHandle n_;
+    ros::Time last_lecture;
+    explicit Person_Detected(const std::string& name);
+    void messageCallback(const movement::bbx_info::ConstPtr& msg);
     BT::NodeStatus tick();
-
-    static BT::PortsList providedPorts()
-    {
-        return { BT::OutputPort<geometry_msgs::Pose>("position") };
-    }
-
+    float dist;
   private:
-    static constexpr float GOING_FORWARD_VEL = 0.3;
-
-    tf::TransformListener listener_;
-
-    geometry_msgs::Pose person_pose_;
+    ros::Subscriber sub_;
 };
 
 }  // namespace movement
 
-#endif  // MOVEMENT_FOLLOWPERSON_H
+#endif  // FSM_ROBOCUP_PERSON_DETECTED_H
