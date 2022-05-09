@@ -1,0 +1,8 @@
+<launch>
+	<param name="xml_path_pkg" value="/behavior_trees_xml/follow_person.xml"/>
+
+	<include file="$(find darknet_ros)/launch/darknet_ros.launch"></include>
+	<include file="$(find navigation)/launch/navigation.launch"></include>
+	<node pkg="fsm_robocup" type="nodo_bbx_msg_publisher_advanced" name="nodo_bbx_msg_publisher"></node>
+	<node pkg="fsm_robocup" type="nodo_prueba_1" name="nodo_prueba_1" output="screen" input="screen"></node>
+</launch>
