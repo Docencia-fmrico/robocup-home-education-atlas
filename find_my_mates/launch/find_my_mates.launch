@@ -1,0 +1,5 @@
+<launch>
+    <include file="$(find robocup_navigation)/launch/navigation.launch"></include>
+    <!--include file="$(find vision)/launch/vision.launch"></include-->
+    <node pkg="find_my_mates" type="find_my_mates_node" name="find_my_mates" output="screen"></node>
+</launch>

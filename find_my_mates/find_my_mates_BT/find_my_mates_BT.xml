@@ -1,0 +1,11 @@
+ <root main_tree_to_execute = "MainTree" >
+     <BehaviorTree ID="MainTree">
+        <Sequence name="root_sequence">
+            <ReactiveFallback>
+                <DetectPerson name="detect_person"/>
+                <Turn name="turn"/>
+            </ReactiveFallback>
+            <ApproachPerson name="approach_person"/>
+        </Sequence>
+     </BehaviorTree>
+ </root>
