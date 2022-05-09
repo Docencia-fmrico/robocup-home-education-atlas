@@ -1,32 +1,8 @@
 <root main_tree_to_execute = "MainTree">
      <BehaviorTree ID="MainTree">
         <SequenceStar name="root_sequence">
-            <Sequence name="root_sequence">
-                <GetPosition name="get_position" goal="1" new_goal="{new_goal}" position="{position}"/>
-                <GoToPosition  name="move" new_goal="{new_goal}" position="{position}"/>
-            </Sequence>
-            <Sequence name="root_sequence">
-                <GetPosition name="get_position" goal="2" new_goal="{new_goal}" position="{position}"/>
-                <GoToPosition  name="move" new_goal="{new_goal}" position="{position}"/>
-            </Sequence>
-            <Sequence name="root_sequence">
-                <GetPosition name="get_position" goal="3" new_goal="{new_goal}" position="{position}"/>
-                <GoToPosition  name="move" new_goal="{new_goal}" position="{position}"/>
-            </Sequence>
-            <Sequence name="root_sequence">
-                <GetPosition name="get_position" goal="4" new_goal="{new_goal}" position="{position}"/>
-                <GoToPosition  name="move" new_goal="{new_goal}" position="{position}"/>
-            </Sequence>
-            <Sequence name="root_sequence">
-                <GetPosition name="get_position" goal="5" new_goal="{new_goal}" position="{position}"/>
-                <GoToPosition  name="move" new_goal="{new_goal}" position="{position}"/>
-            </Sequence>
-            <Sequence name="root_sequence">
-                <GetPosition name="get_position" goal="6" new_goal="{new_goal}" position="{position}"/>
-                <GoToPosition  name="move" new_goal="{new_goal}" position="{position}"/>
-            </Sequence>
-            <Sequence name="root_sequence">
-                <GetPosition name="get_position" goal="7" new_goal="{new_goal}" position="{position}"/>
+            <Sequence>
+                <GetPosition name="get_position" goal="8" new_goal="{new_goal}" position="{position}"/>
                 <GoToPosition  name="move" new_goal="{new_goal}" position="{position}"/>
             </Sequence>
         </SequenceStar>

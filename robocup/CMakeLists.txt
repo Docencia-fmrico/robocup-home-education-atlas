@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(find_my_mates)
+project(robocup)
 
 set(CMAKE_BUILD_TYPE Debug)
 
@@ -40,9 +40,12 @@ endforeach()
 
 add_executable(find_my_mates_node src/find_my_mates_node.cpp)
 target_link_libraries(find_my_mates_node ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
+add_executable(carry_my_luggage_node src/carry_my_luggage_node.cpp)
+target_link_libraries(carry_my_luggage_node ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
 
 
 roslint_cpp(
   src/find_my_mates_node.cpp
+  src/carry_my_luggage.cpp
 )
 

@@ -41,56 +41,59 @@ public:
         res.pos.position.x = 5.0;
         res.pos.position.y = -1.4;
         res.pos.position.z = 0.0;
-        res.pos.orientation = tf::createQuaternionMsgFromYaw(M_PI);
+        res.pos.orientation.x = 0.0;
+        res.pos.orientation.y = 0.0;
+        res.pos.orientation.z = 0.0;
+        res.pos.orientation.w = 1.0;
 
         break;
-      case GUEST2:
-        res.pos.position.x = 3.9;
-        res.pos.position.y = 1.8;
+      case GUESTS_POS:
+        res.pos.position.x = 3.3;
+        res.pos.position.y = 3.6;
         res.pos.position.z = 0.0;
-        res.pos.orientation = tf::createQuaternionMsgFromYaw(M_PI/2);
-
-        break;
-      case GUEST3:
-        res.pos.position.x = 2.7;
-        res.pos.position.y = 1.2;
-        res.pos.position.z = 0.0;
-        res.pos.orientation = tf::createQuaternionMsgFromYaw(M_PI);
-
-        break;
-      case GUEST4:
-        res.pos.position.x = 0.7;
-        res.pos.position.y = 3.9;
-        res.pos.position.z = 0.0;
-        res.pos.orientation = tf::createQuaternionMsgFromYaw(M_PI);
-
-        break;
-      case GUEST5:
-        res.pos.position.x = 1.0;
-        res.pos.position.y = 6.3;
-        res.pos.position.z = 0.0;
-        res.pos.orientation = tf::createQuaternionMsgFromYaw(M_PI);
-
-        break;
-      case GUEST6:
-        res.pos.position.x = 2.2;
-        res.pos.position.y = 7.4;
-        res.pos.position.z = 0.0;
-        res.pos.orientation = tf::createQuaternionMsgFromYaw(M_PI);
-
-        break;
-      case GUEST7:
-        res.pos.position.x = 4.2;
-        res.pos.position.y = 6.6;
-        res.pos.position.z = 0.0;
-        res.pos.orientation = tf::createQuaternionMsgFromYaw(M_PI);
+        res.pos.orientation = tf::createQuaternionMsgFromYaw(-M_PI/2);
 
         break;
       case GUEST1:
         res.pos.position.x = 2.9;
         res.pos.position.y = 1.8;
         res.pos.position.z = 0.0;
+        res.pos.orientation = tf::createQuaternionMsgFromYaw(-M_PI/2);
+
+        break;
+      case GUEST2:
+        res.pos.position.x = 1.2;
+        res.pos.position.y = 2.3;
+        res.pos.position.z = 0.0;
+        res.pos.orientation = tf::createQuaternionMsgFromYaw(-M_PI/2);
+
+        break;
+      case GUEST3:
+        res.pos.position.x = 0.8;
+        res.pos.position.y = 3.9;
+        res.pos.position.z = 0.0;
         res.pos.orientation = tf::createQuaternionMsgFromYaw(M_PI);
+
+        break;
+      case GUEST4:
+        res.pos.position.x = 1.5;
+        res.pos.position.y = 6.2;
+        res.pos.position.z = 0.0;
+        res.pos.orientation = tf::createQuaternionMsgFromYaw(M_PI);
+
+        break;
+      case GUEST5:
+        res.pos.position.x = 2.2;
+        res.pos.position.y = 7.4;
+        res.pos.position.z = 0.0;
+        res.pos.orientation = tf::createQuaternionMsgFromYaw(M_PI/2);
+
+        break;
+      case GUEST6:
+        res.pos.position.x = 4.0;
+        res.pos.position.y = 6.4;
+        res.pos.position.z = 0.0;
+        res.pos.orientation = tf::createQuaternionMsgFromYaw(M_PI/2);
 
         break;
     }

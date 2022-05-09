@@ -26,21 +26,22 @@
 
 int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "movement");
+  ros::init(argc, argv, "find_my_mates");
   ros::NodeHandle n;
 
   BT::BehaviorTreeFactory factory;
   BT::SharedLibrary loader;
 
-  factory.registerFromPlugin(loader.getOSName("current_position_bt_node"));
+  factory.registerFromPlugin(loader.getOSName("detect_person_bt_node"));
+  factory.registerFromPlugin(loader.getOSName("turn_bt_node"));
+  factory.registerFromPlugin(loader.getOSName("approach_person_bt_node"));
   factory.registerFromPlugin(loader.getOSName("get_position_bt_node"));
-  factory.registerFromPlugin(loader.getOSName("detect_operator_bt_node"));
   factory.registerFromPlugin(loader.getOSName("go_to_position_bt_node"));
 
   auto blackboard = BT::Blackboard::create();
 
-  std::string pkgpath = ros::package::getPath("movement");
-  std::string xml_file = pkgpath + "/behavior_tree_xml/carry_my_luggage.xml";
+  std::string pkgpath = ros::package::getPath("robocup");
+  std::string xml_file = pkgpath + "/behavior_trees/find_my_mates_BT.xml";
 
   BT::Tree tree = factory.createTreeFromFile(xml_file, blackboard);
   auto publisher_zmq = std::make_shared<BT::PublisherZMQ>(tree, 10, 1666, 1667);
