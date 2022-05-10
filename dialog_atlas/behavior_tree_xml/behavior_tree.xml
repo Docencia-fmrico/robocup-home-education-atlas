@@ -1,0 +1,7 @@
+<root main_tree_to_execute = "MainTree" >
+     <BehaviorTree ID="MainTree">
+         <ReactiveSequence name="root_sequence">
+            <Name name="name"/>
+        </ReactiveSequence>
+    </BehaviorTree>
+ </root>
