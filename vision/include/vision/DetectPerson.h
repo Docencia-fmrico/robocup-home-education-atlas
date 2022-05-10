@@ -33,12 +33,12 @@ class DetectPerson : public BT::ConditionNode
     explicit DetectPerson(const std::string& name);
     void messageCallback(const vision::bbx_info::ConstPtr& msg);
     BT::NodeStatus tick();
-
-  private:
-    ros::Subscriber sub_;
     ros::NodeHandle n_;
     ros::Time last_lecture;
     float dist;
+
+  private:
+    ros::Subscriber sub_;
 };
 
 }  // namespace vision

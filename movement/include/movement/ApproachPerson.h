@@ -21,6 +21,9 @@
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include "behaviortree_cpp_v3/bt_factory.h"
 
+#include <tf/transform_listener.h>
+#include <geometry_msgs/Pose.h>
+
 #include "PIDController.h"
 #include "vision/bbx_info.h"
 
@@ -32,6 +35,9 @@ namespace movement
 class ApproachPerson : public BT::ActionNodeBase
 {
   public:
+    ros::NodeHandle n_;
+    double dist;
+    int px;
     explicit ApproachPerson(const std::string& name);
     void messageCallback(const vision::bbx_info::ConstPtr& msg);
     void halt();
@@ -39,17 +45,12 @@ class ApproachPerson : public BT::ActionNodeBase
 
   private:
     static constexpr float GOING_FORWARD_VEL = 0.3;
-
-    ros::NodeHandle n_;
     ros::Publisher pub_vel_;
     ros::Subscriber sub_;
-
     br2_tracking::PIDController velocity_pid;
     br2_tracking::PIDController turn_pid;
+  };
 
-    double dist;
-    int px;
-};
 
 }  // namespace movement
 

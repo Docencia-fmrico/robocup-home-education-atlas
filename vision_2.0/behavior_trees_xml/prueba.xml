@@ -1,0 +1,19 @@
+
+<?xml version="1.0"?>
+<root main_tree_to_execute="BehaviorTree">
+    <BehaviorTree ID="BehaviorTree">
+        <ReactiveFallback>
+            <ReactiveSequence>
+                <Is_bumped name="is_bumped"/>
+            </ReactiveSequence>
+            <ReactiveSequence>
+                <ReactiveFallback>
+                    <Person_Detected name="person_detected"/>
+                    <Turn name="turn"/>
+                </ReactiveFallback>
+                <Follow_Person name="follow_person"/>
+            </ReactiveSequence>
+        </ReactiveFallback>
+    </BehaviorTree>
+</root>
+

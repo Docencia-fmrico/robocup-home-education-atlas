@@ -1,4 +1,5 @@
 <launch>
     <include file="$(find darknet_ros)/launch/darknet_ros.launch"></include>
     <node pkg="vision" type="nodo_bbx_msg_publisher_advanced" name="HSV" output="screen"></node>
+    <node pkg="fsm_visual_behavior" type="nodo_camera_filtered" name="filter" output="screen"></node>
 </launch>

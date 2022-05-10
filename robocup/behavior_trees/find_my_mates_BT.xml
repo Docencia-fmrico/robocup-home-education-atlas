@@ -1,0 +1,8 @@
+ <root main_tree_to_execute = "MainTree" >
+     <BehaviorTree ID="MainTree">
+        <Sequence name="root_sequence">
+            <CurrentPosition name="current_position" current_pos="{current_pos}"/>
+            <DetectOperator name="detect_operator" current_pos="{current_pos}"/>
+        </Sequence>
+     </BehaviorTree>
+ </root>

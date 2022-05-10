@@ -1,5 +1,0 @@
-<launch>
-    <include file="$(find navigation)/launch/navigation.launch"></include>
-    <node pkg="movement" type="goal_server_node" name="goal_server" output="screen"></node>
-    <!--node pkg="movement" type="move_node" name="Navigation" output="screen"></node-->
-</launch>

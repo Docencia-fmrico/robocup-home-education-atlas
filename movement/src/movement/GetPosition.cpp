@@ -15,20 +15,14 @@
 #include "movement/GetPosition.h"
 #include "movement/Position.h"
 #include "enum_pos.h"
-#include "time.h"
 
 namespace movement
 {
 
 GetPosition::GetPosition(const std::string& name, const BT::NodeConfiguration& config)
-: BT::ActionNodeBase(name, config), n_guests_(0), guest_(0), new_goal_(false)
+: BT::ActionNodeBase(name, config)
 {
   pos_client_ = n_.serviceClient<movement::Position>("position");
-  
-  srand(time(NULL));
-
-  for (int i = 0; i < n_guests_; i++)
-    guests[i] = 0;
 }
 
 void
@@ -64,6 +58,7 @@ GetPosition::tick()
   }
 
   setOutput<geometry_msgs::Pose>("position", pos_);
+  setOutput<bool>("new_goal", false);
   return BT::NodeStatus::SUCCESS;
 }
 

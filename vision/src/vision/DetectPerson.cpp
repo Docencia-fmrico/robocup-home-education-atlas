@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "vision/DetectPerson.h"
+#include "vision/bbx_info.h"
 
 #include "behaviortree_cpp_v3/behavior_tree.h"
 
@@ -20,14 +21,16 @@ namespace vision
 {
 
 DetectPerson::DetectPerson(const std::string& name)
-: BT::ConditionNode(name, {}), n_()
+: BT::ConditionNode(name, {}), n_(), dist(0.0)
 {
   sub_ = n_.subscribe("bbx_custom_topic", 1, &vision::DetectPerson::messageCallback, this);
 }
 void
 DetectPerson::messageCallback(const vision::bbx_info::ConstPtr& msg){
   last_lecture = msg->header.stamp;
-  dist = msg->dist;
+  if(!std::isnan(dist))
+    dist = msg->dist;
+  ROS_INFO("distance %f",dist);
 }
 
 BT::NodeStatus
@@ -39,7 +42,8 @@ DetectPerson::tick()
   ROS_INFO("ros time %f",ros::Time::now().toSec());
   ROS_INFO("msg time %f",last_lecture.toSec());
   
-  if (((ros::Time::now() - last_lecture).toSec() > 1.0 || last_lecture.toSec() == 0.0) || std::isnan(dist))
+  //if (((ros::Time::now() - last_lecture).toSec() > 1.0 || last_lecture.toSec() == 0.0) || std::isnan(dist))
+  if ((ros::Time::now() - last_lecture).toSec() > 1.0 || last_lecture.toSec() == 0.0 || dist == 0.0)
   {
     return BT::NodeStatus::FAILURE;
   }

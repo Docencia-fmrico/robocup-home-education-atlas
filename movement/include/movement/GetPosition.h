@@ -40,6 +40,7 @@ class GetPosition : public BT::ActionNodeBase
         return 
         { 
           BT::InputPort<int>("goal"),
+          BT::OutputPort<bool>("new_goal"),
           BT::OutputPort<geometry_msgs::Pose>("position") 
         };
     }
@@ -50,12 +51,6 @@ class GetPosition : public BT::ActionNodeBase
     
     geometry_msgs::Pose pos_;
     int goal_;
-    bool new_goal_;
-
-    static const int MAX_GUESTS = 3;
-    int guests[MAX_GUESTS];
-    int n_guests_;
-    int guest_;
 };
 
 }  // namespace movement

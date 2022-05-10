@@ -30,7 +30,7 @@ GoToPosition::GoToPosition(
   const std::string& name,
   const std::string& action_name,
   const BT::NodeConfiguration& config)
-: BTNavAction(name, action_name, config), new_goal_(false)
+: BTNavAction(name, action_name, config), new_goal_(false), counter_(0)
 {
 }
 
@@ -43,23 +43,21 @@ GoToPosition::on_halt()
 void
 GoToPosition::on_start()
 {
-  move_base_msgs::MoveBaseGoal goal;
-
   pos_ = getInput<geometry_msgs::Pose>("position").value();
 
   ROS_INFO("Got position! x = %f, y = %f", pos_.position.x, pos_.orientation.w);
 
-  goal.target_pose.header.frame_id = "map";
-  goal.target_pose.header.stamp = ros::Time::now();
-  goal.target_pose.pose.position.x = pos_.position.x;
-  goal.target_pose.pose.position.y = pos_.position.y;
-  goal.target_pose.pose.position.z = pos_.position.z;
-  goal.target_pose.pose.orientation.x = pos_.orientation.x;
-  goal.target_pose.pose.orientation.y = pos_.orientation.y;
-  goal.target_pose.pose.orientation.z = pos_.orientation.z;
-  goal.target_pose.pose.orientation.w = pos_.orientation.w;
+  goal_.target_pose.header.frame_id = "map";
+  goal_.target_pose.header.stamp = ros::Time::now();
+  goal_.target_pose.pose.position.x = pos_.position.x;
+  goal_.target_pose.pose.position.y = pos_.position.y;
+  goal_.target_pose.pose.position.z = pos_.position.z;
+  goal_.target_pose.pose.orientation.x = pos_.orientation.x;
+  goal_.target_pose.pose.orientation.y = pos_.orientation.y;
+  goal_.target_pose.pose.orientation.z = pos_.orientation.z;
+  goal_.target_pose.pose.orientation.w = pos_.orientation.w;
 
-  set_goal(goal);
+  set_goal(goal_);
 
   ROS_INFO("GoToPosition start");
 }
@@ -69,13 +67,32 @@ GoToPosition::on_tick()
 {
   ROS_INFO("GoToPosition tick");
 
+  new_goal_ = getInput<bool>("new_goal").value();
+
+  if (new_goal_ && counter_++ == 3)
+  {
+    ROS_INFO("new goal: %i", counter_);
+    goal_.target_pose.header.frame_id = "map";
+    goal_.target_pose.header.stamp = ros::Time::now();
+    goal_.target_pose.pose.position.x = pos_.position.x;
+    goal_.target_pose.pose.position.y = pos_.position.y;
+    goal_.target_pose.pose.position.z = pos_.position.z;
+    goal_.target_pose.pose.orientation.x = pos_.orientation.x;
+    goal_.target_pose.pose.orientation.y = pos_.orientation.y;
+    goal_.target_pose.pose.orientation.z = pos_.orientation.z;
+    goal_.target_pose.pose.orientation.w = pos_.orientation.w;
+
+    set_goal(goal_);
+    counter_ = 0;
+  }
+
   return BT::NodeStatus::RUNNING;
 }
 
 void
 GoToPosition::on_feedback(const move_base_msgs::MoveBaseFeedbackConstPtr& feedback)
 {
-	ROS_INFO("Current position %lf %lf", feedback->base_position.pose.orientation.z, feedback->base_position.pose.orientation.w);
+	ROS_INFO("Current position %lf %lf", feedback->base_position.pose.position.x, feedback->base_position.pose.position.y);
 }
 
 }  // namespace movement

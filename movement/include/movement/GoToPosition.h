@@ -45,13 +45,16 @@ class GoToPosition : public BTNavAction
     {
         return 
         {
+          BT::InputPort<bool>("new_goal"),
           BT::InputPort<geometry_msgs::Pose>("position") 
         };
     }
     
   private:
     geometry_msgs::Pose pos_;
+    move_base_msgs::MoveBaseGoal goal_;
     bool new_goal_;
+    int counter_;
 };
 
 }  // namespace movement

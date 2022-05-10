@@ -27,6 +27,7 @@ find_package(catkin REQUIRED COMPONENTS
   move_base_msgs
   geometry_tf
   tf
+  vision
 )
 
 add_service_files(
@@ -43,12 +44,15 @@ generate_messages(
 
 catkin_package(
 CATKIN_DEPENDS 
-  roscpp std_msgs 
+  roscpp 
+  std_msgs
+  geometry_msgs 
   behaviortree_cpp_v3
   actionlib_msgs 
   move_base_msgs 
   geometry_tf
   tf
+  vision
 )
 
 include_directories(
@@ -60,11 +64,13 @@ include_directories(
 add_library(${PROJECT_NAME} src/PIDController.cpp)
 
 add_library(approach_person_bt_node SHARED src/movement/ApproachPerson.cpp)
+add_library(current_position_bt_node SHARED src/movement/CurrentPosition.cpp)
 add_library(get_position_bt_node SHARED src/movement/GetPosition.cpp)
 add_library(go_to_position_bt_node SHARED src/movement/GoToPosition.cpp)
 add_library(turn_bt_node SHARED src/movement/Turn.cpp)
 list(APPEND plugin_libs
   approach_person_bt_node
+  current_position_bt_node
   get_position_bt_node
   go_to_position_bt_node
   turn_bt_node
@@ -83,10 +89,13 @@ add_executable(position_server_node src/position_server_node.cpp)
 target_link_libraries(move_node ${catkin_LIBRARIES} ${ZMQ_LIBRARIES})
 target_link_libraries(position_server_node ${catkin_LIBRARIES})
 
+add_dependencies(approach_person_bt_node vision_generate_messages_cpp)
+
 roslint_cpp(
   src/move_node.cpp
   src/position_server_node.cpp
   include/movement/ApproachPerson.h src/movement/ApproachPerson.cpp
+  include/movement/CurrentPosition.h src/movement/CurrentPosition.cpp
   include/movement/GetPosition.h src/movement/GetPosition.cpp
   include/movement/GoToPosition.h src/movement/GoToPosition.cpp
   include/movement/Turn.h src/movement/Turn.cpp
