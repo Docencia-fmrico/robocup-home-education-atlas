@@ -95,7 +95,7 @@ Además de escuchar el nombre se comprueba si se lo ha dicho bien.
 Para saber si se ha escuchado el nombre y si está bien escuchado, se utiliza dos variables booleanas.
 - keep_listening: Es true si se escucha la intención de obtener nombre
 - keep_listening_2 : Es true si se escucha la intención de comprobar nombre.
-En el caso de que estas dos variables sean true, es que hemos obtenido el nombre. En caso contrario, pasado lod 15 segundos de escucha se vuelve a pregunatar por el nombre.
+En el caso de que estas dos variables sean true, es que hemos obtenido el nombre. En caso contrario, pasado los 15 segundos de escucha se vuelve a pregunatar por el nombre.
 
 ###### SPEAK:
 Este caso lo que hace es volver a pasar al estado IDLE para que pregunte el nombre otra vez.
@@ -103,23 +103,18 @@ Este caso lo que hace es volver a pasar al estado IDLE para que pregunte el nomb
 ```c++
 switch (state_)
     {
-    
       case IDLE:
-      
         ros::Duration(0.2).sleep();
         speak("Tell me your name");
         state_ = LISTEN;
         ROS_INFO("IDLE -> LISTEN");
         start_ts_ = ros::Time::now();
         
-
         break;
-
-      case LISTEN:
         
+      case LISTEN:
         if ((ros::Time::now() - start_ts_).toSec() < WAITING_TIME) 
         {
-          
           listen();
           
           if ( keep_listening_ == false) 
@@ -131,10 +126,8 @@ switch (state_)
               ROS_INFO("NAME OBTAINED");
               pub_name_.publish(person_name_);
               stop_ = true;
-              
             }
           }
-          
         }
         
         else
@@ -146,9 +139,8 @@ switch (state_)
         break;
 
       case SPEAK:
-
         state_ = IDLE;
         break;
     }
 ```
-Una vez que se ha obtenido el nombre, se publica por un topic.
+Una vez que se ha obtenido, el nombre se publica  mediante un topic.
