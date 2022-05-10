@@ -62,13 +62,25 @@ En cuanto a la navegación hemos utilizado un servicio que contiene las posicion
 ```c++
 enum {INIT_POS, OP_POS, GUESTS_POS, GUEST1, GUEST2, GUEST3, GUEST4, GUEST5, GUEST6};
 ```
+Position server:
 ```c++
 int32 goal
 ---
 geometry_msgs/Pose pos
 ```
-Para que el robot siga al operador con navegación hemos filtrado la camiseta del operador para sacar su TF, de esta forma podemos conocer su posición respecto al mapa y hacer que el robot vaya a esa posición. Como el objetivo está ocupado por el operador, hemos cambiado el parámetro de `default_tolerance` a 0.7 en el fichero `navfn_global_planner_params.yaml` para que el robot vaya al punto más cercano del objetivo en el radio de 0.7.
 
+Para que el robot siga al operador con navegación hemos filtrado la camiseta del operador para sacar su TF, de esta forma podemos conocer su posición respecto al mapa y hacer que el robot vaya a esa posición. Como el objetivo está ocupado por el operador, hemos cambiado el parámetro de `default_tolerance` en el fichero `navfn_global_planner_params.yaml` para que el robot vaya al punto más cercano del objetivo en el radio de 0.7.
+```c++
+NavfnROS:
+  visualize_potential: false    #Publish potential for rviz as pointcloud2, not really helpful, default false
+  allow_unknown: true          #Specifies whether or not to allow navfn to create plans that traverse unknown space, default true
+                                #Needs to have track_unknown_space: true in the obstacle / voxel layer (in costmap_commons_param) to work
+  planner_window_x: 0.0         #Specifies the x size of an optional window to restrict the planner to, default 0.0
+  planner_window_y: 0.0         #Specifies the y size of an optional window to restrict the planner to, default 0.0
+
+  default_tolerance: 0.7        #If the goal is in an obstacle, the planer will plan to the nearest point in the radius of default_tolerance, default 0.0
+                                #The area is always searched, so could be slow for big values
+```
 
 ### Diálogo
 
