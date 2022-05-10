@@ -7,12 +7,20 @@ La robocup es un evento creado para promover el acceso a tecnologías modernas, 
 En esta primera prueba el objetivo general es acercarse a una persona que va a señalarnos y a decirnos que bolsa tendremos que coger, para que a continuacion el robot la detecte y la lleve siguiendo a la persona a traves de una zona que no va a conocer del todo. Despues, el robot deberá volver a la zona inicial, pero esta vez sin seguir a la persona, es decir, deberá hacer el camino recorrido, pero esta vez solo. La prueba consta de varios puntos:
 
 - Entrar a la arena donde esta el operador
-- Detectar la bolsa que dice el operario
-- Seguir al operario fuera de la arena
+- Detectar la bolsa que dice el operador
+- Seguir al operador fuera de la arena
 - Llegar a la zona inicial solo
 
 ## Find my mates
+Para la prueba de find my mates, las tareas a realizar son las siguientes, el robot va a empezar de nuevo fuera de la arena, que es donde estan las personas de las que tenemos que obtener la informacion. Entonces, el robot debera entrar a la arena y comprobar en cual de las posiciones hay una persona. El robot, habiendo detectado a la persona, tendra que preguntarle el nombre, y quedarse con el color de su camiseta y el objeto que lleva. Despues, sabiendo todo esto, el robot debe ir a la zona donde esta el operador y dar esta informacion que ha obtenido. Asi lo tiene que hacer por lo menos con dos personas. Los puntos a tener en cuenta son:
 
+- Detectar al invitado
+- Ponerse enfrente de el
+- Ir al frente del operador
+- Decir la posicion del invitado
+- Dar el nombre del invitado
+- Decir el color de su camiseta
+- Nombrar el objeto que lleva
 
 ## Como hemos abordado la práctica
 Hemos decidido dividir las pruebas en varias tareas que habia que resolver. Cada una de ellas esta relacionada con un problema distinto de la práctica que había que solucionar para poder realizar la prueba. Había tres grandes partes, la vision, que era la encargada de detectar la informacion de los sensores; la navegacion, que tenia como objetivo desplazarse tanto a puntos concretos del mapa, como desplazarse a lo largo de el siguiendo a la persona, siendo capaz luego de volver al punto inicial.
