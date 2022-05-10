@@ -4,7 +4,12 @@
 La robocup es un evento creado para promover el acceso a tecnologías modernas, como la visión por ordenador, la comprensión del habla o el aprendizaje automático; y para impulsar el desarrollo de robots de servicio. Para la robocup de este año, hay tres pruebas, carry my luggage, find my mates y receptionist. Nosotros, para la entrega de esta práctica hemos decidido desarrollar codigo para las pruebas de carry my luggage y find my mates.
 
 ## Carry my luggage
-En esta primera prueba, el robot está colocado fuera de la arena, y por medio
+En esta primera prueba el objetivo general es acercarse a una persona que va a señalarnos y a decirnos que bolsa tendremos que coger, para que a continuacion el robot la detecte y la lleve siguiendo a la persona a traves de una zona que no va a conocer del todo. Despues, el robot deberá volver a la zona inicial, pero esta vez sin seguir a la persona, es decir, deberá hacer el camino recorrido, pero esta vez solo. La prueba consta de varios puntos:
+
+- Entrar a la arena donde esta el operador
+- Detectar la bolsa que dice el operario
+- Seguir al operario fuera de la arena
+- Llegar a la zona inicial solo
 
 ## Find my mates
 
