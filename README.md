@@ -55,8 +55,8 @@ Para la parte de diálogo hemos utilizado una máquina de estados que tiene 3 es
 En este estado solo pregunta el nombre del guest y pasa al siguuiente estado (LISTEN), además se crea una variable para almacemar la marca de tiempo.
 
 ###### LISTEN:
-En este estado se empieza a escuchar durante máximo 15 segundos, si en 15 segundos no escucha la intención del nombre, se pasa al sigiente estado (SPEAK).
-Además de escuchar el nombre se comprueba si se ha dicho bien el nombre.
+En este estado se empieza a escuchar durante máximo 15 segundos, si en 15 segundos no escucha la intención de obtener nombre, se pasa al sigiente estado (SPEAK).
+Además de escuchar el nombre se comprueba si se lo ha dicho bien.
 Para saber si se ha escuchado el nombre y si está bien escuchado, se utiliza dos variables booleanas.
 - keep_listening: Es true si se escucha la intención de obtener nombre
 - keep_listening_2 : Es true si se escucha la intención de comprobar nombre.
