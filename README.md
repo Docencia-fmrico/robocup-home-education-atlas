@@ -49,3 +49,71 @@ Esto es un trozo de codigo de este nodo, que tras detectar a la persona, recorta
 
 ### Diálogo
 
+Para la parte de diálogo hemos utilizado una máquina de estados que tiene 3 estados posibles:
+
+###### IDLE: 
+En este estado solo pregunta el nombre del guest y pasa al siguuiente estado (LISTEN), además se crea una variable para almacemar la marca de tiempo.
+
+###### LISTEN:
+En este estado se empieza a escuchar durante máximo 15 segundos, si en 15 segundos no escucha la intención del nombre, se pasa al sigiente estado (SPEAK).
+Además de escuchar el nombre se comprueba si se ha dicho bien el nombre.
+Para saber si se ha escuchado el nombre y si está bien escuchado, se utiliza dos variables booleanas.
+- keep_listening: Es true si se escucha la intención de obtener nombre
+- keep_listening_2 : Es true si se escucha la intención de comprobar nombre.
+En el caso de que estas dos variables sean true, es que hemos obtenido el nombre. En caso contrario, pasado lod 15 segundos de escucha se vuelve a pregunatar por el nombre.
+
+###### SPEAK:
+Este caso lo que hace es volver a pasar al estado IDLE para que pregunte el nombre otra vez.
+
+```c++
+switch (state_)
+    {
+    
+      case IDLE:
+      
+        ros::Duration(0.2).sleep();
+        speak("Tell me your name");
+        state_ = LISTEN;
+        ROS_INFO("IDLE -> LISTEN");
+        start_ts_ = ros::Time::now();
+        
+
+        break;
+
+      case LISTEN:
+        
+        if ((ros::Time::now() - start_ts_).toSec() < WAITING_TIME) 
+        {
+          
+          listen();
+          
+          if ( keep_listening_ == false) 
+          {
+            person_name_.name = name_;
+              
+            if (keep_listening_2_ == false)
+            {
+              ROS_INFO("NAME OBTAINED");
+              pub_name_.publish(person_name_);
+              stop_ = true;
+              
+            }
+          }
+          
+        }
+        
+        else
+        {
+          state_ = SPEAK;
+          ROS_INFO("LISTEN -> SPEAK");
+        }
+        
+        break;
+
+      case SPEAK:
+
+        state_ = IDLE;
+        break;
+    }
+```
+Una vez que se ha obtenido el nombre, se publica por un topic.
