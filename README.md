@@ -58,6 +58,16 @@ void rgb_callback(const sensor_msgs::ImageConstPtr& image, const darknet_ros_msg
 Esto es un trozo de codigo de este nodo, que tras detectar a la persona, recorta la imagen obtenida, y además llama a la funcion que se encarga de detectar los colores con la mayor superficie que encuentra.
 
 ### Navegación
+En cuanto a la navegación hemos utilizado un servicio que contiene las posiciones que nos interesan. A este servicio se le pasa una variable de tipo enumerado, que es el objetivo al que queremos ir, y el servicio nos devuelve la posición respecto al mapa y la orientación.
+```c++
+enum {INIT_POS, OP_POS, GUESTS_POS, GUEST1, GUEST2, GUEST3, GUEST4, GUEST5, GUEST6};
+```
+```c++
+int32 goal
+---
+geometry_msgs/Pose pos
+```
+Para que el robot siga al operador con navegación hemos filtrado la camiseta del operador para sacar su TF, de esta forma podemos conocer su posición respecto al mapa y hacer que el robot vaya a esa posición. Como el objetivo está ocupado por el operador, hemos cambiado el parámetro de `default_tolerance` a 0.7 en el fichero `navfn_global_planner_params.yaml` para que el robot vaya al punto más cercano del objetivo en el radio de 0.7.
 
 
 ### Diálogo
